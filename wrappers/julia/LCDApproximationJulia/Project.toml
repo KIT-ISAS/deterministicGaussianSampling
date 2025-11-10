@@ -1,7 +1,0 @@
-name = "LCDApproximationJulia"
-uuid = "eaa251d9-d597-4dcb-a691-c5002366c3d2"
-authors = ["Aaron Preus <udxct@student.kit.edu>"]
-version = "0.1.0"
-
-[deps]
-Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
