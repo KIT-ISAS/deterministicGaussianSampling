@@ -50,7 +50,8 @@ void save2DMatrix(double* mat, size_t rows, size_t cols,
 
 void generateEllipsePoints(double* points, size_t numPoints, double a,
                            double b) {
-  std::srand(std::time(nullptr));  // Seed random number generator
+  std::srand(static_cast<unsigned int>(
+      std::time(nullptr)));  // Seed random number generator
 
   for (size_t i = 0; i < numPoints; i++) {
     double theta = (std::rand() / (double)RAND_MAX) * 2 * M_PI;  // Random angle
@@ -116,7 +117,7 @@ void runRandomApproximation() {
   covDiag[1] = 1.0;
 
   gsl_rng* r = gsl_rng_alloc(gsl_rng_default);
-  gsl_rng_set(r, time(NULL));
+  gsl_rng_set(r, static_cast<unsigned long>(time(NULL)));
   for (size_t j = 0; j < M; j++) {
     for (size_t k = 0; k < N; k++) {
       y[j * N + k] = gsl_ran_gaussian(r, covDiag[k]);
@@ -182,67 +183,6 @@ void runRandomApproximation() {
   if (x_dirac_to_dirac_weighted) delete[] x_dirac_to_dirac_weighted;
   if (x_gausian_to_dirac) delete[] x_gausian_to_dirac;
 }
-
-class testero {
- public:
-  static void test_dirac_to_dirac_approx_short() {
-    size_t L = 1000;
-    size_t M = 10000;
-    size_t N = 25;
-    size_t bMax = 100;
-    double distance = 0.00;
-    gsl_vector* y = gsl_vector_alloc(M * N);
-    gsl_vector* x = gsl_vector_alloc(L * N);
-    gsl_vector* grad = gsl_vector_alloc(L * N);
-    DiracToDiracConstWeightOptimizationParams params =
-        DiracToDiracConstWeightOptimizationParams(y, N, M, L, bMax, 100.00);
-
-    for (size_t i = 0; i < 10; i++) {
-      for (size_t i = 0; i < M * N; i++) {
-        y->data[i] = (std::rand() / (double)RAND_MAX);
-      }
-
-      CaptureTime::start("test combined distance metrix");
-      dirac_to_dirac_approx_short<double>::combined_distance_metric(
-          x, &params, &distance, grad);
-      CaptureTime::stop("test combined distance metrix");
-
-      CaptureTime::start("test combined distance metrix threaded");
-      dirac_to_dirac_approx_short_thread<double>::combined_distance_metric(
-          x, &params, &distance, grad);
-      CaptureTime::stop("test combined distance metrix threaded");
-    }
-  }
-
-  static void test_gm_to_dirac_approx_short() {
-    size_t L = 100;
-    size_t N = 10;
-    size_t bMax = 100;
-    double distance = 0.00;
-    gsl_vector* covDiag = gsl_vector_alloc(N);
-    gsl_vector_set_all(covDiag, 1.00);
-    gsl_vector* x = gsl_vector_alloc(L * N);
-    gsl_vector* grad = gsl_vector_alloc(L * N);
-
-    GMToDiracConstWeightOptimizationParams params =
-        GMToDiracConstWeightOptimizationParams(covDiag, N, L, bMax, 10.00);
-    for (size_t i = 0; i < 100; i++) {
-      for (size_t i = 0; i < L * N; i++) {
-        x->data[i] = (std::rand() / (double)RAND_MAX);
-      }
-      params.integrationParams->reset(x);
-      // double res;
-      // CaptureTime::start("gm_to_dirac_approx_short::P2");
-      // res = gm_to_dirac_short<double>::calculateP2(10.00, &params);
-      // CaptureTime::stop("gm_to_dirac_approx_short::P2");
-      // std::cout << "P2: " << res << "\n";
-
-      CaptureTime::start("gm_to_dirac_approx_short::D2");
-      gm_to_dirac_short<double>::calculateD2(x, &params, &distance, grad);
-      CaptureTime::stop("gm_to_dirac_approx_short::D2");
-    }
-  }
-};
 
 void euclideanDistanceTest() {
   const size_t L = 1000;
