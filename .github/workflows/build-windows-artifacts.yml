@@ -79,9 +79,9 @@ jobs:
               run: |
                   mkdir %ARTIFACT_DIR%
                   # Copy main binaries
-                  copy %BUILD_DIR%\Release %ARTIFACT_DIR%\
+                  xcopy /Y /S "%BUILD_DIR%\*.exe" "%ARTIFACT_DIR%\\"
+                  xcopy /Y /S "%BUILD_DIR%\*.dll" "%ARTIFACT_DIR%\\"
                   # Copy dependencies (.dll from vcpkg)
-                  xcopy /Y /S .\vcpkg\installed\x64-mingw-static\bin\*.dll %ARTIFACT_DIR%\
                   xcopy /Y /S .\vcpkg\installed\x64-mingw-dynamic\bin\*.dll %ARTIFACT_DIR%\
 
             # upload artifacts
