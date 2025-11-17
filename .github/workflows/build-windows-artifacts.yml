@@ -24,7 +24,7 @@ jobs:
               id: cache-mingw
               uses: actions/cache@v4
               with:
-                  path: C:/tools/mingw64
+                  path: C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin
                   key: mingw-${{ runner.os }}-cache
                   restore-keys: |
                       mingw-${{ runner.os }}-
@@ -36,7 +36,7 @@ jobs:
 
             # add MinGW to PATH
             - name: Add MinGW to PATH
-              run: echo "C:\tools\mingw64\bin" >> $GITHUB_PATH
+              run: echo "C:\ProgramData\chocolatey\lib\mingw\tools\install\mingw64\bin" >> $GITHUB_PATH
 
             # cache vcpkg packages
             - name: Cache vcpkg
