@@ -27,6 +27,17 @@ jobs:
             - name: Add MinGW to PATH
               run: echo "C:\tools\mingw64\bin" >> $GITHUB_PATH
 
+            # cache vcpkg packages
+            - name: Cache vcpkg packages
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      ./vcpkg/installed
+                      ./vcpkg/packages
+                  key: vcpkg-${{ runner.os }}-mingw
+                  restore-keys: |
+                      vcpkg-${{ runner.os }}-
+
             # install vcpkg for dependencies
             - name: Setup vcpkg
               run: |
@@ -43,10 +54,7 @@ jobs:
               run: |
                   mkdir %BUILD_DIR%
                   cd %BUILD_DIR%
-                  cmake .. -G "MinGW Makefiles" ^
-                      -DCMAKE_BUILD_TYPE=Release ^
-                      -DCMAKE_TOOLCHAIN_FILE=..\vcpkg\scripts\buildsystems\vcpkg.cmake ^
-                      -DENABLE_OPENMP=ON
+                  cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=..\vcpkg\scripts\buildsystems\vcpkg.cmake -DENABLE_OPENMP=ON
 
             # build project
             - name: Build Project
