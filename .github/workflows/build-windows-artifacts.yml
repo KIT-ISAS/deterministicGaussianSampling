@@ -63,9 +63,15 @@ jobs:
                   cd %BUILD_DIR%
                   cmake --build . --config Release
 
-            - name: list build folder
-              shell: cmd
-              run: dir build /s
+            - name: List current directory
+              run: dir . /s
+
+            - name: List environment variables
+              run: set
+
+            - name: List build folder explicitly
+              run: dir $env:BUILD_DIR /s
+              shell: powershell
 
             - name: Upload build artifacts
               uses: actions/upload-artifact@v4
