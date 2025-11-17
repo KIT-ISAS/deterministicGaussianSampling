@@ -19,19 +19,8 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v3
 
-            # cache MinGW installation
-            - name: Cache MinGW
-              id: cache-mingw
-              uses: actions/cache@v4
-              with:
-                  path: C:\ProgramData\mingw64\mingw64\bin
-                  key: mingw-${{ runner.os }}-cache
-                  restore-keys: |
-                      mingw-${{ runner.os }}-
-
             # install MinGW via Chocolatey
             - name: Install MinGW
-              if: steps.cache-mingw.outputs.cache-hit != 'true'
               run: choco install mingw -y --no-progress
 
             # add MinGW to PATH
