@@ -81,30 +81,23 @@ jobs:
                   Set-Location $env:BUILD_DIR
                   cmake --build . --config Release
 
-            - name: List build folder explicitly
-              shell: powershell
-              run: Get-ChildItem -Recurse
+            # prepare and upload artifacts
+            - name: prepare artifact folder
+              shell: pwsh
+              run: |
+                  # create artifact folder
+                  New-Item -ItemType Directory -Force -Path $env:ARTIFACT_DIR
 
-            - name: Upload build artifacts
+                  # copy main binaries and DLLs
+                  Get-ChildItem -Path $env:BUILD_DIR -Include *.exe, *.dll, *.dll.a -Recurse | 
+                      ForEach-Object { Copy-Item $_.FullName -Destination $env:ARTIFACT_DIR -Force }
+
+                  # copy vcpkg dynamic DLL dependencies
+                  Get-ChildItem -Path ".\vcpkg\installed\x64-mingw-dynamic\bin" -Filter *.dll -Recurse | 
+                      ForEach-Object { Copy-Item $_.FullName -Destination $env:ARTIFACT_DIR -Force }
+
+            - name: upload artifacts
               uses: actions/upload-artifact@v4
               with:
-                  name: samplinglcd-build
-                  path: ${{ github.workspace }}/${{ env.BUILD_DIR }}/**
-                  retention-days: 1
-
-            # # collect binaries and shared libraries
-            # - name: Prepare artifact folder
-            #   run: |
-            #       mkdir %ARTIFACT_DIR%
-            #       # Copy main binaries
-            #       xcopy /Y /S "%BUILD_DIR%\*.exe" "%ARTIFACT_DIR%\\"
-            #       xcopy /Y /S "%BUILD_DIR%\*.dll" "%ARTIFACT_DIR%\\"
-            #       # Copy dependencies (.dll from vcpkg)
-            #       xcopy /Y /S .\vcpkg\installed\x64-mingw-dynamic\bin\*.dll %ARTIFACT_DIR%\
-
-            # # upload artifacts
-            # - name: Upload Artifacts
-            #   uses: actions/upload-artifact@v4
-            #   with:
-            #       name: windows-binaries
-            #       path: \%ARTIFACT_DIR%\
+                  name: windows-binaries
+                  path: ${{ env.ARTIFACT_DIR }}
