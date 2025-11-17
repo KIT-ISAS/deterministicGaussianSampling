@@ -63,8 +63,9 @@ jobs:
                   cd %BUILD_DIR%
                   cmake --build . --config Release
 
-            - name: List build folder
-              run: dir ${{ github.workspace }}/${{ env.BUILD_DIR }} /s
+            - name: list build folder
+              shell: cmd
+              run: dir build /s
 
             - name: Upload build artifacts
               uses: actions/upload-artifact@v4
