@@ -17,6 +17,14 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v3
 
+            # install MinGW via Chocolatey
+            - name: Install MinGW
+              run: choco install mingw -y --no-progress
+
+            # add MinGW to PATH
+            - name: Add MinGW to PATH
+              run: echo "C:\tools\mingw64\bin" >> $GITHUB_PATH
+
             # install vcpkg for dependencies
             - name: Setup vcpkg
               run: |
