@@ -26,7 +26,7 @@ jobs:
             # install dependencies via vcpkg (shared libs)
             - name: Install dependencies
               run: |
-                  .\vcpkg\vcpkg install gsl:x64-windows-shared googletest:x64-windows-shared benchmark:x64-windows-shared
+                  .\vcpkg\vcpkg install gsl:x64-mingw-static gsl:x64-mingw-dynamic googletest:x64-mingw-static benchmark:x64-mingw-static
 
             # configure CMake for your project
             - name: Configure CMake
