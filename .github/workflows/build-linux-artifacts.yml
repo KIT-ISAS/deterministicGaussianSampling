@@ -16,11 +16,11 @@ jobs:
 
         steps:
             # checkout code
-            - name: Checkout repository
+            - name: checkout repository
               uses: actions/checkout@v3
 
             # install dependencies
-            - name: Install MinGW
+            - name: install dependencies
               run: |
                   sudo apt-get update
                   sudo apt-get install -y build-essential cmake git libgsl-dev libgtest-dev libbenchmark-dev
@@ -29,7 +29,7 @@ jobs:
                   cd /usr/src/gtest
                   sudo cmake .
                   sudo make
-                  sudo mv libg* /usr/lib/
+                  sudo cp *.a /usr/lib
 
                   # build and install Google Benchmark (if not provided by apt)
                   if [ ! -f "/usr/lib/x86_64-linux-gnu/libbenchmark.a" ]; then
@@ -43,7 +43,7 @@ jobs:
                   fi
 
             # make build directory and compile
-            - name: Configure and build application
+            - name: configure and build application
               run: |
                   mkdir -p build
                   cd build
