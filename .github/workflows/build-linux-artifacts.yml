@@ -1,0 +1,51 @@
+name: Build Windows C++ Project
+
+on:
+    push:
+        branches:
+            - "**"
+
+jobs:
+    build-windows:
+        runs-on: ubuntu-24.04
+        env:
+            BUILD_DIR: build
+            ARTIFACT_DIR: artifacts
+            CC: C:/ProgramData/mingw64/mingw64/bin/gcc.exe
+            CXX: C:/ProgramData/mingw64/mingw64/bin/g++.exe
+
+        steps:
+            # checkout code
+            - name: Checkout repository
+              uses: actions/checkout@v3
+
+            # install dependencies
+            - name: Install MinGW
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y build-essential cmake git libgsl-dev libgtest-dev libbenchmark-dev
+
+                  # build google test
+                  cd /usr/src/gtest
+                  sudo cmake .
+                  sudo make
+                  sudo mv libg* /usr/lib/
+
+                  # build and install Google Benchmark (if not provided by apt)
+                  if [ ! -f "/usr/lib/x86_64-linux-gnu/libbenchmark.a" ]; then
+                    git clone https://github.com/google/benchmark.git
+                    cd benchmark
+                    git clone https://github.com/google/googletest.git
+                    mkdir build && cd build
+                    cmake .. -DCMAKE_BUILD_TYPE=Release
+                    make
+                    sudo make install
+                  fi
+
+            # make build directory and compile
+            - name: Configure and build application
+              run: |
+                  mkdir -p build
+                  cd build
+                  cmake .. -DCMAKE_CXX_FLAGS="-fopenmp" -DCMAKE_BUILD_TYPE=Release
+                  cmake --build . --config Release
