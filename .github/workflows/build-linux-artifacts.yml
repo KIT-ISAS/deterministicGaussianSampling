@@ -23,6 +23,7 @@ jobs:
                   sudo apt-get update
                   sudo apt-get install -y build-essential cmake git libgsl-dev libomp-dev
 
+            # build Google Test
             - name: build Google Test
               run: |
                   cd $GITHUB_WORKSPACE
@@ -33,6 +34,7 @@ jobs:
                   make -j$(nproc)
                   sudo make install
 
+            # build Google Benchmark
             - name: build Google Benchmark
               run: |
                   cd $GITHUB_WORKSPACE
@@ -51,3 +53,10 @@ jobs:
                   cd build
                   cmake .. -DCMAKE_CXX_FLAGS="-fopenmp" -DCMAKE_BUILD_TYPE=Release
                   cmake --build . --config Release
+
+            # test application
+            - name: run tests
+              run: |
+                  cd build
+                  cd lib
+                  ./unit
