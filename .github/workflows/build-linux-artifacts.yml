@@ -1,4 +1,4 @@
-name: Build Windows C++ Project
+name: Build Ubuntu C++ Project
 
 on:
     push:
@@ -6,13 +6,11 @@ on:
             - "**"
 
 jobs:
-    build-windows:
+    build-linux:
         runs-on: ubuntu-24.04
         env:
             BUILD_DIR: build
             ARTIFACT_DIR: artifacts
-            CC: C:/ProgramData/mingw64/mingw64/bin/gcc.exe
-            CXX: C:/ProgramData/mingw64/mingw64/bin/g++.exe
 
         steps:
             # checkout code
@@ -29,7 +27,7 @@ jobs:
                   cd /usr/src/gtest
                   sudo cmake .
                   sudo make
-                  sudo cp *.a /usr/lib
+                  sudo cp lib/*.a /usr/lib
 
                   # build and install Google Benchmark (if not provided by apt)
                   if [ ! -f "/usr/lib/x86_64-linux-gnu/libbenchmark.a" ]; then
