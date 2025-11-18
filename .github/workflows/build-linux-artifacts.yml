@@ -28,6 +28,7 @@ jobs:
                   sudo cmake .
                   sudo make
                   sudo cp lib/*.a /usr/lib
+                  echo "Google Test installed."
 
                   # build and install Google Benchmark (if not provided by apt)
                   if [ ! -f "/usr/lib/x86_64-linux-gnu/libbenchmark.a" ]; then
@@ -39,6 +40,7 @@ jobs:
                     make
                     sudo make install
                   fi
+                  echo "Google Benchmark installed."
 
             # make build directory and compile
             - name: configure and build application
