@@ -30,18 +30,6 @@ jobs:
                   sudo cp lib/*.a /usr/lib
                   echo "Google Test installed."
 
-                  # build and install Google Benchmark (if not provided by apt)
-                  if [ ! -f "/usr/lib/x86_64-linux-gnu/libbenchmark.a" ]; then
-                    git clone https://github.com/google/benchmark.git
-                    cd benchmark
-                    git clone https://github.com/google/googletest.git
-                    mkdir build && cd build
-                    cmake .. -DCMAKE_BUILD_TYPE=Release
-                    make
-                    sudo make install
-                  fi
-                  echo "Google Benchmark installed."
-
             # make build directory and compile
             - name: configure and build application
               run: |
