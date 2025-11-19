@@ -76,6 +76,35 @@ target_include_directories(approxLCD_shared PUBLIC
     ${DIRAC_TO_DIRAC_DIR}
     ${GM_TO_DIRAC_DIR}
 )
+
+# platform-specific options
+# make some includes and linking static
+if(UNIX AND NOT APPLE)
+    # Linux
+    target_compile_options(approxLCD_shared PRIVATE -static-libgcc -static-libstdc++)
+    target_link_options(approxLCD_shared PRIVATE -static-libgcc -static-libstdc++)
+    set_target_properties(approxLCD_shared PROPERTIES
+        BUILD_RPATH "$ORIGIN"
+        INSTALL_RPATH "$ORIGIN"
+    )
+elseif(APPLE)
+    # macOS
+    target_compile_options(approxLCD_shared PRIVATE -stdlib=libc++)
+    set_target_properties(approxLCD_shared PROPERTIES
+        BUILD_RPATH "@loader_path"
+        INSTALL_RPATH "@loader_path"
+    )
+elseif(WIN32)
+    # Windows MSVC
+    if(MSVC)
+        target_compile_options(approxLCD_shared PRIVATE /MT)
+    else()
+        # MinGW
+        target_compile_options(approxLCD_shared PRIVATE -static-libgcc -static-libstdc++)
+        target_link_options(approxLCD_shared PRIVATE -static-libgcc -static-libstdc++)
+    endif()
+endif()
+
 set_target_properties(approxLCD_shared PROPERTIES OUTPUT_NAME "approxLCD")
 target_link_libraries(approxLCD_shared PUBLIC GSL::gsl GSL::gslcblas OpenMP::OpenMP_CXX)
 
