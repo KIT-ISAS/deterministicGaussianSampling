@@ -23,10 +23,10 @@ DLL_EXPORT void delete_dirac_to_dirac_approx_short_thread_double(
 DLL_EXPORT bool dirac_to_dirac_approx_short_thread_double_approximate(
     void* instance, const double* y, size_t M, size_t L, size_t N, size_t bMax,
     double* x, const double* wX, const double* wY, GslminimizerResult* result,
-    const ApproximateOptions& options) {
+    const ApproximateOptions* options) {
   auto* obj =
       static_cast<dirac_to_dirac_approx_short_thread<double>*>(instance);
-  return obj->approximate(y, M, L, N, bMax, x, wX, wY, result, options);
+  return obj->approximate(y, M, L, N, bMax, x, wX, wY, result, *options);
 }
 
 DLL_EXPORT void* create_dirac_to_dirac_approx_short_thread_float() {
@@ -41,9 +41,9 @@ DLL_EXPORT void delete_dirac_to_dirac_approx_short_thread_float(
 DLL_EXPORT bool dirac_to_dirac_approx_short_thread_float_approximate(
     void* instance, const float* y, size_t M, size_t L, size_t N, size_t bMax,
     float* x, const float* wX, const float* wY, GslminimizerResult* result,
-    const ApproximateOptions& options) {
+    const ApproximateOptions* options) {
   auto* obj = static_cast<dirac_to_dirac_approx_short_thread<float>*>(instance);
-  return obj->approximate(y, M, L, N, bMax, x, wX, wY, result, options);
+  return obj->approximate(y, M, L, N, bMax, x, wX, wY, result, *options);
 }
 
 }  // extern "C"

@@ -22,9 +22,9 @@ DLL_EXPORT void delete_gm_to_dirac_short_double(void* instance) {
 DLL_EXPORT bool gm_to_dirac_short_double_approximate(
     void* instance, const double* covDiag, size_t L, size_t N, size_t bMax,
     double* x, const double* wX, GslminimizerResult* result,
-    const ApproximateOptions& options) {
+    const ApproximateOptions* options) {
   auto* obj = static_cast<gm_to_dirac_short<double>*>(instance);
-  return obj->approximate(covDiag, L, N, bMax, x, wX, result, options);
+  return obj->approximate(covDiag, L, N, bMax, x, wX, result, *options);
 }
 
 DLL_EXPORT void* create_gm_to_dirac_short_float() {
@@ -38,9 +38,9 @@ DLL_EXPORT void delete_gm_to_dirac_short_float(void* instance) {
 DLL_EXPORT bool gm_to_dirac_short_float_approximate(
     void* instance, const float* covDiag, size_t L, size_t N, size_t bMax,
     float* x, const float* wX, GslminimizerResult* result,
-    const ApproximateOptions& options) {
+    const ApproximateOptions* options) {
   auto* obj = static_cast<gm_to_dirac_short<float>*>(instance);
-  return obj->approximate(covDiag, L, N, bMax, x, wX, result, options);
+  return obj->approximate(covDiag, L, N, bMax, x, wX, result, *options);
 }
 
 }  // extern "C"

@@ -25,11 +25,11 @@ DLL_EXPORT bool dirac_to_dirac_approx_short_function_double_approximate(
     double* x,
     typename dirac_to_dirac_approx_function_i<double>::wXf wXcallback,
     typename dirac_to_dirac_approx_function_i<double>::wXd wXDcallback,
-    GslminimizerResult* result, const ApproximateOptions& options) {
+    GslminimizerResult* result, const ApproximateOptions* options) {
   auto* obj =
       static_cast<dirac_to_dirac_approx_short_function<double>*>(instance);
   return obj->approximate(y, M, L, N, bMax, x, wXcallback, wXDcallback, result,
-                          options);
+                          *options);
 }
 
 }  // extern "C"

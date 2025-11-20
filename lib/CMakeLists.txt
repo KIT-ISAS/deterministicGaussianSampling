@@ -158,3 +158,19 @@ target_link_libraries(benchmark_target PRIVATE
         benchmark::benchmark 
         benchmark::benchmark_main
         approxLCD_static)
+
+# Install your library
+install(TARGETS approxLCD_shared
+        RUNTIME DESTINATION bin      # for DLLs on Windows
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib)
+
+# List of runtime DLLs
+set(MINGW_DLLS
+    "C:/ProgramData/mingw64/mingw64/bin/libwinpthread-1.dll"
+    "C:/ProgramData/mingw64/mingw64/bin/libgomp-1.dll"
+    "C:/ProgramData/mingw64/mingw64/bin/libgcc_s_seh-1.dll"
+)
+
+# Install the MinGW DLLs into the same bin folder
+install(FILES ${MINGW_DLLS} DESTINATION bin)
