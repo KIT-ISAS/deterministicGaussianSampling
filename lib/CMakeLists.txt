@@ -159,7 +159,7 @@ target_link_libraries(benchmark_target PRIVATE
         benchmark::benchmark_main
         approxLCD_static)
 
-# Install your library
+# install library
 install(TARGETS approxLCD_shared
         RUNTIME DESTINATION bin      # for DLLs on Windows
         LIBRARY DESTINATION lib
