@@ -2,7 +2,7 @@ name: Release
 
 on:
   workflow_run:
-    workflows: ["Linux Build", "Windows Build"]
+    workflows: ["Build Ubuntu", "Build Windows"]
     types: [completed]
 
 jobs:
