@@ -26,11 +26,15 @@ find_package(OpenMP REQUIRED)
 
 # dirac_to_dirac sources
 set(DIRAC_TO_DIRAC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/dirac_to_dirac)
+set(DIRAC_TO_DIRAC_C_WRAPPER_DIR ${DIRAC_TO_DIRAC_DIR}/wrappers)
 file(GLOB DIRAC_TO_DIRAC_SOURCES ${DIRAC_TO_DIRAC_DIR}/*.cpp)
+file(GLOB DIRAC_TO_DIRAC_C_WRAPPER_SOURCES ${DIRAC_TO_DIRAC_C_WRAPPER_DIR}/*.cpp)
 
 # gm_to_dirac sources
 set(GM_TO_DIRAC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/gm_to_dirac)
+set(GM_TO_DIRAC_C_WRAPPER_DIR ${GM_TO_DIRAC_DIR}/wrappers)
 file(GLOB GM_TO_DIRAC_SOURCES ${GM_TO_DIRAC_DIR}/*.cpp)
+file(GLOB GM_TO_DIRAC_C_WRAPPER_SOURCES ${GM_TO_DIRAC_C_WRAPPER_DIR}/*.cpp)
 
 # common sources
 set(COMMON_SOURCES
@@ -55,12 +59,16 @@ set(COMMON_INCLUDES
 add_library(approxLCD_static STATIC
     ${COMMON_SOURCES}
     ${DIRAC_TO_DIRAC_SOURCES}
+    ${DIRAC_TO_DIRAC_C_WRAPPER_SOURCES}
     ${GM_TO_DIRAC_SOURCES}
+    ${GM_TO_DIRAC_C_WRAPPER_SOURCES}
 )
 target_include_directories(approxLCD_static PUBLIC
     ${COMMON_INCLUDES}
     ${DIRAC_TO_DIRAC_DIR}
+    ${DIRAC_TO_DIRAC_C_WRAPPER_DIR}
     ${GM_TO_DIRAC_DIR}
+    ${GM_TO_DIRAC_C_WRAPPER_DIR}
 )
 set_target_properties(approxLCD_static PROPERTIES OUTPUT_NAME "approxLCD")
 target_link_libraries(approxLCD_static PUBLIC GSL::gsl GSL::gslcblas OpenMP::OpenMP_CXX)
@@ -69,12 +77,16 @@ target_link_libraries(approxLCD_static PUBLIC GSL::gsl GSL::gslcblas OpenMP::Ope
 add_library(approxLCD_shared SHARED
     ${COMMON_SOURCES}
     ${DIRAC_TO_DIRAC_SOURCES}
+    ${DIRAC_TO_DIRAC_C_WRAPPER_SOURCES}
     ${GM_TO_DIRAC_SOURCES}
-    )
+    ${GM_TO_DIRAC_C_WRAPPER_SOURCES}
+)
 target_include_directories(approxLCD_shared PUBLIC
     ${COMMON_INCLUDES}
     ${DIRAC_TO_DIRAC_DIR}
+    ${DIRAC_TO_DIRAC_C_WRAPPER_DIR}
     ${GM_TO_DIRAC_DIR}
+    ${GM_TO_DIRAC_C_WRAPPER_DIR}
 )
 
 # platform-specific options
@@ -146,3 +158,19 @@ target_link_libraries(benchmark_target PRIVATE
         benchmark::benchmark 
         benchmark::benchmark_main
         approxLCD_static)
+
+# Install your library
+install(TARGETS approxLCD_shared
+        RUNTIME DESTINATION bin      # for DLLs on Windows
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib)
+
+# List of runtime DLLs
+set(MINGW_DLLS
+    "C:/ProgramData/mingw64/mingw64/bin/libwinpthread-1.dll"
+    "C:/ProgramData/mingw64/mingw64/bin/libgomp-1.dll"
+    "C:/ProgramData/mingw64/mingw64/bin/libgcc_s_seh-1.dll"
+)
+
+# Install the MinGW DLLs into the same bin folder
+install(FILES ${MINGW_DLLS} DESTINATION bin)
