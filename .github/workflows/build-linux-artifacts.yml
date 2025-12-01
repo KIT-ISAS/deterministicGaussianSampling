@@ -15,7 +15,7 @@ jobs:
     steps:
       # checkout code
       - name: checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # install dependencies
       - name: install dependencies
@@ -33,12 +33,6 @@ jobs:
             ./configure CFLAGS="-fPIC" CXXFLAGS="-fPIC" --enable-static --disable-shared --prefix=/usr/local
             make -j$(nproc)
             sudo make install
-
-      # install dependencies
-      - name: install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y build-essential cmake git libgsl-dev libomp-dev
 
       # build Google Test
       - name: build Google Test
@@ -63,18 +57,12 @@ jobs:
           make -j$(nproc)
           sudo make install
 
-            # make build directory and compile
-            - name: configure and build application
-              run: |
-                  mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
-                  cmake .. -DCMAKE_CXX_FLAGS="-fopenmp" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=install
-                  cmake --build . --target install -j$(nproc)
       # make build directory and compile
       - name: configure and build application
         run: |
-          mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
-          cmake .. -DCMAKE_CXX_FLAGS="-fopenmp" -DCMAKE_BUILD_TYPE=Release
-          cmake --build . --config Release
+            mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
+            cmake .. -DCMAKE_CXX_FLAGS="-fopenmp" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=install
+            cmake --build . --target install -j$(nproc)
 
       # test application
       - name: run tests
@@ -85,28 +73,15 @@ jobs:
       - name: prepare artifact folder
         run: |
           # create artifact folder
-          mkdir -p "$ARTIFACT_DIR"
+          mkdir -p "$ARTIFACT_DIR/unix"
 
-                  # project binaries
-                  cp -v "$BUILD_DIR"/src/main "$ARTIFACT_DIR/unix"/
-                  cp -v "$BUILD_DIR"/lib/unit "$ARTIFACT_DIR/unix"/
-                  cp -v "$BUILD_DIR"/lib/benchmark "$ARTIFACT_DIR/unix"/
           # project executables
-          cp -v "$BUILD_DIR"/src/main "$ARTIFACT_DIR"/
-          cp -v "$BUILD_DIR"/lib/unit "$ARTIFACT_DIR"/
-          cp -v "$BUILD_DIR"/lib/benchmark "$ARTIFACT_DIR"/
+          cp -v "$BUILD_DIR"/src/main "$ARTIFACT_DIR/unix"/
+          cp -v "$BUILD_DIR"/lib/unit "$ARTIFACT_DIR/unix"/
+          cp -v "$BUILD_DIR"/lib/benchmark "$ARTIFACT_DIR/unix"/
 
-                  # project libraries
-                  cp -rv "$BUILD_DIR"/install/* "$ARTIFACT_DIR/unix"/
           # project libraries
-          find "$BUILD_DIR" -type f -name "*.so*" -exec cp -v {} "$ARTIFACT_DIR" \;
-          # static libs
-          find "$BUILD_DIR" -type f -name "*.a" -exec cp -v {} "$ARTIFACT_DIR" \;
-
-          # system libraries (GSL / OpenMP)
-          cp -v /usr/lib/x86_64-linux-gnu/libgsl.so* "$ARTIFACT_DIR"/
-          cp -v /usr/lib/x86_64-linux-gnu/libgslcblas.so* "$ARTIFACT_DIR"/
-          cp -v /usr/lib/x86_64-linux-gnu/libgomp.so* "$ARTIFACT_DIR"/
+          cp -rv "$BUILD_DIR"/install/* "$ARTIFACT_DIR/unix"/
 
       - name: upload artifacts
         uses: actions/upload-artifact@v4
