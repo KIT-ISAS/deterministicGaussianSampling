@@ -1,21 +1,21 @@
 name: Build Ubuntu C++ Project
 
 on:
-    push:
-        branches:
-            - "**"
+  push:
+    branches:
+      - "**"
 
 jobs:
-    build-linux:
-        runs-on: ubuntu-24.04
-        env:
-            BUILD_DIR: build
-            ARTIFACT_DIR: artifacts
+  build-linux:
+    runs-on: ubuntu-24.04
+    env:
+      BUILD_DIR: build
+      ARTIFACT_DIR: artifacts
 
-        steps:
-            # checkout code
-            - name: checkout repository
-              uses: actions/checkout@v3
+    steps:
+      # checkout code
+      - name: checkout repository
+        uses: actions/checkout@v3
 
             # install dependencies
             - name: install dependencies
@@ -33,29 +33,34 @@ jobs:
                   ./configure CFLAGS="-fPIC" CXXFLAGS="-fPIC" --enable-static --disable-shared --prefix=/usr/local
                   make -j$(nproc)
                   sudo make install
+      # install dependencies
+      - name: install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git libgsl-dev libomp-dev
 
-            # build Google Test
-            - name: build Google Test
-              run: |
-                  cd $GITHUB_WORKSPACE
-                  git clone https://github.com/google/googletest.git
-                  cd googletest
-                  mkdir "$BUILD_DIR" && cd "$BUILD_DIR"
-                  cmake .. -DCMAKE_BUILD_TYPE=Release
-                  make -j$(nproc)
-                  sudo make install
+      # build Google Test
+      - name: build Google Test
+        run: |
+          cd $GITHUB_WORKSPACE
+          git clone https://github.com/google/googletest.git
+          cd googletest
+          mkdir "$BUILD_DIR" && cd "$BUILD_DIR"
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          make -j$(nproc)
+          sudo make install
 
-            # build Google Benchmark
-            - name: build Google Benchmark
-              run: |
-                  cd $GITHUB_WORKSPACE
-                  git clone https://github.com/google/benchmark.git
-                  cd benchmark
-                  git clone https://github.com/google/googletest.git  # Required by Benchmark
-                  mkdir "$BUILD_DIR" && cd "$BUILD_DIR"
-                  cmake .. -DCMAKE_BUILD_TYPE=Release
-                  make -j$(nproc)
-                  sudo make install
+      # build Google Benchmark
+      - name: build Google Benchmark
+        run: |
+          cd $GITHUB_WORKSPACE
+          git clone https://github.com/google/benchmark.git
+          cd benchmark
+          git clone https://github.com/google/googletest.git  # Required by Benchmark
+          mkdir "$BUILD_DIR" && cd "$BUILD_DIR"
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+          make -j$(nproc)
+          sudo make install
 
             # make build directory and compile
             - name: configure and build application
@@ -63,28 +68,47 @@ jobs:
                   mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
                   cmake .. -DCMAKE_CXX_FLAGS="-fopenmp" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=install
                   cmake --build . --target install -j$(nproc)
+      # make build directory and compile
+      - name: configure and build application
+        run: |
+          mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
+          cmake .. -DCMAKE_CXX_FLAGS="-fopenmp" -DCMAKE_BUILD_TYPE=Release
+          cmake --build . --config Release
 
-            # test application
-            - name: run tests
-              run: |
-                  ./"$BUILD_DIR"/lib/unit
+      # test application
+      - name: run tests
+        run: |
+          ./"$BUILD_DIR"/lib/unit
 
-            # prepare and upload artifacts (Linux)
-            - name: prepare artifact folder
-              run: |
-                  # create artifact folder
-                  mkdir -p "$ARTIFACT_DIR"
+      # prepare and upload artifacts (Linux)
+      - name: prepare artifact folder
+        run: |
+          # create artifact folder
+          mkdir -p "$ARTIFACT_DIR"
 
                   # project binaries
                   cp -v "$BUILD_DIR"/src/main "$ARTIFACT_DIR/unix"/
                   cp -v "$BUILD_DIR"/lib/unit "$ARTIFACT_DIR/unix"/
                   cp -v "$BUILD_DIR"/lib/benchmark "$ARTIFACT_DIR/unix"/
+          # project executables
+          cp -v "$BUILD_DIR"/src/main "$ARTIFACT_DIR"/
+          cp -v "$BUILD_DIR"/lib/unit "$ARTIFACT_DIR"/
+          cp -v "$BUILD_DIR"/lib/benchmark "$ARTIFACT_DIR"/
 
                   # project libraries
                   cp -rv "$BUILD_DIR"/install/* "$ARTIFACT_DIR/unix"/
+          # project libraries
+          find "$BUILD_DIR" -type f -name "*.so*" -exec cp -v {} "$ARTIFACT_DIR" \;
+          # static libs
+          find "$BUILD_DIR" -type f -name "*.a" -exec cp -v {} "$ARTIFACT_DIR" \;
 
-            - name: upload artifacts
-              uses: actions/upload-artifact@v4
-              with:
-                  name: linux-binaries
-                  path: ${{ env.ARTIFACT_DIR }}
+          # system libraries (GSL / OpenMP)
+          cp -v /usr/lib/x86_64-linux-gnu/libgsl.so* "$ARTIFACT_DIR"/
+          cp -v /usr/lib/x86_64-linux-gnu/libgslcblas.so* "$ARTIFACT_DIR"/
+          cp -v /usr/lib/x86_64-linux-gnu/libgomp.so* "$ARTIFACT_DIR"/
+
+      - name: upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-binaries
+          path: ${{ env.ARTIFACT_DIR }}
