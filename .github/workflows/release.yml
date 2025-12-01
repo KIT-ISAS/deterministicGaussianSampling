@@ -1,4 +1,4 @@
-name: Release
+name: Create Release
 
 on:
   push:
@@ -11,28 +11,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: download Linux artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: linux
-          path: release/linux
-
-      - name: download Windows artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: windows
-          path: release/windows
-
-      # download macOS artifact
-      # - name: Download macOS artifact
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     name: macos
-      #     path: release/macos
-
-      - name: Create GitHub Release
+      - name: publish GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: release/**/*
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          body: |
+            Automated release for tag ${{ github.ref_name }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
