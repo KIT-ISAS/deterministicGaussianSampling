@@ -154,7 +154,7 @@ install(TARGETS approxLCD_shared approxLCD_static
 
 if(UNIX AND NOT APPLE)
     set(UNIX_DLLS
-        "/lib/x86_64-linux-gnu/libgomp.so.1"
+        "/usr/lib/x86_64-linux-gnu/libgomp.so.1.0.0"
     )
     install(FILES ${UNIX_DLLS} DESTINATION lib)
 elseif(APPLE)

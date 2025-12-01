@@ -63,7 +63,6 @@ jobs:
             mkdir -p "$BUILD_DIR" && cd "$BUILD_DIR"
             cmake .. -DCMAKE_CXX_FLAGS="-fopenmp" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=install
             cmake --build . --target install -j$(nproc)
-            ldconfig -p | grep libgomp.so.1
 
       # test application
       - name: run tests
