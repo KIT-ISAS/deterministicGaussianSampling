@@ -26,6 +26,7 @@ jobs:
 
       # cache third-party deps (GSL, GTest, Benchmark)
       - name: cache third-party deps
+        id: cache-deps
         uses: actions/cache@v4
         with:
           path: ${{ env.DEPS_DIR }}
