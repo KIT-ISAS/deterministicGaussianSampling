@@ -50,7 +50,7 @@ jobs:
                   .\vcpkg\vcpkg install gsl:x64-mingw-static gsl:x64-mingw-dynamic gtest:x64-mingw-static benchmark:x64-mingw-static
 
             # configure CMake for your project
-            - name: Configure CMake
+            - name: configure and build application
               shell: pwsh
               run: |
                   # create the build directory
@@ -75,15 +75,17 @@ jobs:
                   -DOpenMP_gomp_LIBRARY="$GOMP_LIB" `
                   -DCMAKE_INSTALL_PREFIX=install
 
+                  # build
+                  cmake --build . --target install -j $env:NUMBER_OF_PROCESSORS
+
             # build project
-            - name: Build Project
+            - name: build Project
               shell: pwsh
               run: |
-                  Set-Location $env:BUILD_DIR
-                  cmake --build . --target install
+                  Set-Location $env:BUILD_DIR        
 
             # run tests
-            - name: Run Tests
+            - name: run Tests
               shell: pwsh
               run: |
                   & "$env:BUILD_DIR/lib/unit.exe"
