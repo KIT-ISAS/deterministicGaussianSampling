@@ -236,13 +236,13 @@ jobs:
       - name: download Linux artifact
         uses: actions/download-artifact@v4
         with:
-          name: linux-artifact
+          name: linux
           path: release/linux
 
       - name: download Windows artifact
         uses: actions/download-artifact@v4
         with:
-          name: windows-artifact
+          name: windows
           path: release/windows
 
       - name: create GitHub Release
