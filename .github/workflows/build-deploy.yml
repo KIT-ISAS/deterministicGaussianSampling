@@ -230,6 +230,7 @@ jobs:
     runs-on: ubuntu-latest
 
     needs: [build-windows, build-linux]
+
     steps:
       - uses: actions/checkout@v4
 
@@ -245,13 +246,23 @@ jobs:
           name: windows
           path: release/windows
 
+      - name: create Linux ZIP
+        run: |
+          cd release/linux
+          zip -r ../linux.zip .
+
+      - name: create Windows ZIP
+        run: |
+          cd release/windows
+          zip -r ../windows.zip .
+
       - name: create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
           files: |
-            release/linux/**
-            release/windows/**
+            release/linux.zip
+            release/windows.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
