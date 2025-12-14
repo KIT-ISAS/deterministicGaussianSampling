@@ -1,0 +1,87 @@
+# use the official manylinux2014 image for maximum Linux portability
+FROM quay.io/pypa/manylinux2014_x86_64
+
+# install required build tools
+RUN yum install -y \
+    gcc \
+    gcc-c++ \
+    make \
+    cmake3 \
+    git \
+    openssl-devel \
+    autoconf \
+    automake \
+    libtool \
+    && yum clean all
+
+# c++17 support
+SHELL ["/opt/rh/devtoolset-10/root/usr/bin/bash", "-c"]
+
+WORKDIR /work
+
+# environment variables
+ENV DEPS_DIR=/opt/deps
+ENV BUILD_DIR=/work/build
+ENV ARTIFACT_DIR=/work/artifacts
+
+# -----------------------------
+# Build dependencies at image build time
+# -----------------------------
+RUN set -xe \
+    && mkdir -p "$DEPS_DIR"
+
+# --- build GSL ---
+RUN set -xe \
+    && git clone --depth 1 https://git.savannah.gnu.org/git/gsl.git \
+    && cd gsl \
+    && autoreconf -i \
+    && ./configure \
+    CFLAGS="-fPIC" \
+    CXXFLAGS="-fPIC" \
+    --enable-static \
+    --disable-shared \
+    --prefix="$DEPS_DIR" \
+    && make -j$(nproc) \
+    && make install \
+    && cd .. \
+    && rm -rf gsl
+
+# --- build Google Test ---
+RUN set -xe \
+    && git clone --depth 1 https://github.com/google/googletest.git \
+    && cd googletest \
+    && mkdir build && cd build \
+    && cmake .. \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+    -DCMAKE_INSTALL_PREFIX="$DEPS_DIR" \
+    -DCMAKE_CXX_STANDARD=17 \
+    && make -j$(nproc) \
+    && make install \
+    && cd ../.. \
+    && rm -rf googletest
+
+# --- build Google Benchmark ---
+RUN set -xe \
+    && git clone --depth 1 https://github.com/google/benchmark.git \
+    && cd benchmark \
+    && git clone --depth 1 https://github.com/google/googletest.git \
+    && mkdir build && cd build \
+    && cmake .. \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+    -DCMAKE_INSTALL_PREFIX="$DEPS_DIR" \
+    -DCMAKE_CXX_STANDARD=17 \
+    && make -j$(nproc) \
+    && make install \
+    && cd ../.. \
+    && rm -rf benchmark
+
+# -----------------------------
+# Runtime build entrypoint
+# -----------------------------
+COPY linux-builder.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/linux-builder.sh
+
+WORKDIR /work
+ENTRYPOINT ["linux-builder.sh"]
