@@ -10,12 +10,14 @@ on:
     branches:
       - main
 
+env:
+  BUILD_DIR: build
+  ARTIFACT_DIR: artifacts
+
 jobs:
   build-windows:
     runs-on: windows-latest
     env:
-      BUILD_DIR: build
-      ARTIFACT_DIR: artifacts
       CC: C:/ProgramData/mingw64/mingw64/bin/gcc.exe
       CXX: C:/ProgramData/mingw64/mingw64/bin/g++.exe
 
