@@ -72,13 +72,13 @@ static const long long minN = 1;
 static const long long stepN = 1;
 
 static void SquaredEuclideanDistanceUtilsBenchmark_CustomArgumentsLM(
-    benchmark::internal::Benchmark* b) {
+    benchmark::Benchmark* b) {
   for (int L = minL; L <= maxL; L += stepL)
     for (int M = minM; M <= maxM; M += stepM)
       for (int N = minN; N <= maxN; N += stepN) b->Args({L, M, N});
 }
 static void SquaredEuclideanDistanceUtilsBenchmark_CustomArgumentsLL(
-    benchmark::internal::Benchmark* b) {
+    benchmark::Benchmark* b) {
   for (int L = minL; L <= maxL; L += stepL)
     for (int N = minN; N <= maxN; N += stepN) b->Args({L, 0, N});
 }
