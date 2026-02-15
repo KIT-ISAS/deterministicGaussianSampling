@@ -53,6 +53,9 @@ class gm_to_dirac_approx_short_test_modified_van_mises_distance_sq_derivative
   static gradient_van_mises_distance gradVanMisesDistance;
 };
 
+gradient_van_mises_distance
+gm_to_dirac_approx_short_test_modified_van_mises_distance_sq_derivative::gradVanMisesDistance;
+
 TEST_P(gm_to_dirac_approx_short_test_modified_van_mises_distance_sq_derivative,
        parameterized_test_modified_van_mises_distance_sq_derivative) {
   GmToDiracTestCaseParams p = GetParam();

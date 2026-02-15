@@ -56,6 +56,8 @@ class dirac_to_dirac_approx_short_test_modified_van_mises_distance_sq_derivative
       gradVanMisesDistanceSqConstWeight;
 };
 
+gradient_van_mises_distance_sq_const_weight dirac_to_dirac_approx_short_test_modified_van_mises_distance_sq_derivative::gradVanMisesDistanceSqConstWeight;
+
 TEST_P(
     dirac_to_dirac_approx_short_test_modified_van_mises_distance_sq_derivative,
     parameterized_test_modified_van_mises_distance_sq_derivative) {
