@@ -185,4 +185,6 @@ jobs:
       run: sudo apt-get install doxygen graphviz
 
     - name: build docs
-      run: mkdir doxygen/html && doxygen Doxyfile
+      run: |
+        mkdir -p doxygen/html
+        doxygen Doxyfile
