@@ -40,6 +40,7 @@ file(GLOB GM_TO_DIRAC_C_WRAPPER_SOURCES ${GM_TO_DIRAC_C_WRAPPER_DIR}/*.cpp)
 set(COMMON_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/debug/capture_time.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/gsl_minimizer/gsl_minimizer.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/options/wrappers/approximate_options_c.cpp
     # ${CMAKE_CURRENT_SOURCE_DIR}/gsl_multivariative_gradient
 )
 # common includes
@@ -53,6 +54,7 @@ set(COMMON_INCLUDES
     ${CMAKE_CURRENT_SOURCE_DIR}/math_utils
     ${CMAKE_CURRENT_SOURCE_DIR}/cache_manager
     ${CMAKE_CURRENT_SOURCE_DIR}/options
+    ${CMAKE_CURRENT_SOURCE_DIR}/options/wrappers
 )
 
 # static library target
