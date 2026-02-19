@@ -4,6 +4,9 @@ Deterministic approximation and reduction of multivariate **Dirac mixtures** and
 
 The library provides optimization-based approximation algorithms with analytical gradients and optional multi-threaded execution.
 
+📖 **Full API Documentation:**  
+https://kit-isas.github.io/deterministicGaussianSampling/
+
 Prebuilt binaries for **Linux** and **Windows** are automatically generated via GitHub Actions and attached to tagged releases.
 
 ---
