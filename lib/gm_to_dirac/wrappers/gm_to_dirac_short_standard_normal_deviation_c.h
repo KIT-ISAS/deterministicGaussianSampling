@@ -31,6 +31,24 @@ DLL_EXPORT bool gm_to_dirac_short_standard_normal_deviation_double_approximate(
                           options ? *options : ApproximateOptions{});
 }
 
+DLL_EXPORT void
+gm_to_dirac_short_standard_normal_deviation_double_modified_van_mises_distance_sq(
+    void* instance, double* distance, size_t L, size_t N, size_t bMax,
+    double* x, const double* wX) {
+  auto* obj = static_cast<gm_to_dirac_short_standard_normal_deviation<double>*>(
+      instance);
+  obj->modified_van_mises_distance_sq(distance, L, N, bMax, x, wX);
+}
+
+DLL_EXPORT void
+gm_to_dirac_short_standard_normal_deviation_double_modified_van_mises_distance_sq_derivative(
+    void* instance, double* gradient, size_t L, size_t N, size_t bMax,
+    double* x, const double* wX) {
+  auto* obj = static_cast<gm_to_dirac_short_standard_normal_deviation<double>*>(
+      instance);
+  obj->modified_van_mises_distance_sq_derivative(gradient, L, N, bMax, x, wX);
+}
+
 DLL_EXPORT void* create_gm_to_dirac_short_standard_normal_deviation_float() {
   return new gm_to_dirac_short_standard_normal_deviation<float>();
 }
@@ -48,6 +66,24 @@ DLL_EXPORT bool gm_to_dirac_short_standard_normal_deviation_float_approximate(
       instance);
   return obj->approximate(L, N, bMax, x, wX, result,
                           options ? *options : ApproximateOptions{});
+}
+
+DLL_EXPORT void
+gm_to_dirac_short_standard_normal_deviation_float_modified_van_mises_distance_sq(
+    void* instance, float* distance, size_t L, size_t N, size_t bMax, float* x,
+    const float* wX) {
+  auto* obj = static_cast<gm_to_dirac_short_standard_normal_deviation<float>*>(
+      instance);
+  obj->modified_van_mises_distance_sq(distance, L, N, bMax, x, wX);
+}
+
+DLL_EXPORT void
+gm_to_dirac_short_standard_normal_deviation_float_modified_van_mises_distance_sq_derivative(
+    void* instance, float* gradient, size_t L, size_t N, size_t bMax, float* x,
+    const float* wX) {
+  auto* obj = static_cast<gm_to_dirac_short_standard_normal_deviation<float>*>(
+      instance);
+  obj->modified_van_mises_distance_sq_derivative(gradient, L, N, bMax, x, wX);
 }
 
 }  // extern "C"

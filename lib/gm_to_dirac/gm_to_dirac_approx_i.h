@@ -14,7 +14,7 @@
 /**
  * @brief interface for the gausian mixture to dirac approximation
  *
- * @tparam T type of the vector (float, double, long double)
+ * @tparam T type of the vector (float, double)
  */
 template <typename T>
 class gm_to_dirac_approx_i {
@@ -42,6 +42,41 @@ class gm_to_dirac_approx_i {
                            const ApproximateOptions& options) = 0;
 
   /**
+   * @brief calculate modified van mises distance based on standard normal
+   * deviation and x
+   *
+   * @param distance pointer to distance value to be calculated
+   * @param L number of data points for approximation
+   * @param N dimension of the data
+   * @param bMax bMax
+   * @param x first guess for the approximation and return value
+   * @param result minimizer result
+   * @param options options for minimizer
+   * @return true, on success, false otherwise
+   */
+  virtual void modified_van_mises_distance_sq(const T* covDiag, T* distance,
+                                              size_t L, size_t N, size_t bMax,
+                                              T* x, const T* wX) = 0;
+
+  /**
+   * @brief calculate modified van mises distance based on standard normal
+   * deviation and x
+   *
+   * @param gradient pointer to gradient to be calculated
+   * @param L number of data points for approximation
+   * @param N dimension of the data
+   * @param bMax bMax
+   * @param x first guess for the approximation and return value
+   * @param result minimizer result
+   * @param options options for minimizer
+   * @return true, on success, false otherwise
+   */
+  virtual void modified_van_mises_distance_sq_derivative(const T* covDiag,
+                                                         T* gradient, size_t L,
+                                                         size_t N, size_t bMax,
+                                                         T* x, const T* wX) = 0;
+
+  /**
    * @brief approximate using gsl vectors
    *
    * @param covDiag covariance matrix diagonal
@@ -60,6 +95,41 @@ class gm_to_dirac_approx_i {
                            const ApproximateOptions& options) = 0;
 
   /**
+   * @brief calculate modified van mises distance based on standard normal
+   * deviation and x
+   *
+   * @param distance pointer to distance value to be calculated
+   * @param L number of data points for approximation
+   * @param N dimension of the data
+   * @param bMax bMax
+   * @param x first guess for the approximation and return value
+   * @param result minimizer result
+   * @param options options for minimizer
+   * @return true, on success, false otherwise
+   */
+  virtual void modified_van_mises_distance_sq(const GSLVectorType* covDiag,
+                                              T* distance, size_t L, size_t N,
+                                              size_t bMax, GSLVectorType* x,
+                                              const GSLVectorType* wX) = 0;
+
+  /**
+   * @brief calculate modified van mises distance based on standard normal
+   * deviation and x
+   *
+   * @param gradient pointer to gradient to be calculated
+   * @param L number of data points for approximation
+   * @param N dimension of the data
+   * @param bMax bMax
+   * @param x first guess for the approximation and return value
+   * @param result minimizer result
+   * @param options options for minimizer
+   * @return true, on success, false otherwise
+   */
+  virtual void modified_van_mises_distance_sq_derivative(
+      const GSLVectorType* covDiag, GSLVectorType* gradient, size_t L, size_t N,
+      size_t bMax, GSLVectorType* x, const GSLVectorType* wX) = 0;
+
+  /**
    * @brief approximate using gsl matricies where possible
    *
    * @param covDiag covariance matrix diagonal
@@ -76,6 +146,41 @@ class gm_to_dirac_approx_i {
                            size_t bMax, GSLMatrixType* x,
                            const GSLVectorType* wX, GslminimizerResult* result,
                            const ApproximateOptions& options) = 0;
+
+  /**
+   * @brief calculate modified van mises distance based on standard normal
+   * deviation and x
+   *
+   * @param distance pointer to distance value to be calculated
+   * @param L number of data points for approximation
+   * @param N dimension of the data
+   * @param bMax bMax
+   * @param x first guess for the approximation and return value
+   * @param result minimizer result
+   * @param options options for minimizer
+   * @return true, on success, false otherwise
+   */
+  virtual void modified_van_mises_distance_sq(const GSLVectorType* covDiag,
+                                              T* distance, size_t L, size_t N,
+                                              size_t bMax, GSLMatrixType* x,
+                                              const GSLVectorType* wX) = 0;
+
+  /**
+   * @brief calculate modified van mises distance based on standard normal
+   * deviation and x
+   *
+   * @param gradient pointer to gradient to be calculated
+   * @param L number of data points for approximation
+   * @param N dimension of the data
+   * @param bMax bMax
+   * @param x first guess for the approximation and return value
+   * @param result minimizer result
+   * @param options options for minimizer
+   * @return true, on success, false otherwise
+   */
+  virtual void modified_van_mises_distance_sq_derivative(
+      const GSLVectorType* covDiag, GSLMatrixType* gradient, size_t L, size_t N,
+      size_t bMax, GSLMatrixType* x, const GSLVectorType* wX) = 0;
 };
 
 #endif  // GM_TO_DIRAC_I_H

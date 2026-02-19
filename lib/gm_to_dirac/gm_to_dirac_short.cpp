@@ -18,6 +18,8 @@
 
 #include "capture_time.h"
 #include "gsl_minimizer.h"
+#include "gsl_utils_view_helper.h"
+#include "gsl_utils_weight_helper.h"
 #include "math_util_defs.h"
 
 template <typename T>
@@ -28,20 +30,36 @@ bool gm_to_dirac_short<T>::approximate(const T* covDiag, size_t L, size_t N,
   assert(x != nullptr);
   assert(covDiag != nullptr);
 
-  GSLVectorViewType xFlat =
-      GSLTemplateTypeAlias<T>::vector_view_from_array(x, L * N);
-  GSLVectorViewType covDiagView =
-      GSLTemplateTypeAlias<T>::vector_view_from_array(covDiag, N);
+  GSLVectorView<T> vectorViewX(x, L * N);
+  GSLVectorView<T> vectorViewWX(wX, L);
+  GSLVectorView<T> vectorViewCovDiag(covDiag, N);
+  return approximate(vectorViewCovDiag, L, N, bMax, vectorViewX, vectorViewWX,
+                     result, options);
+}
 
-  GSLVectorType* wXVector = nullptr;
-  GSLVectorViewType wXVectorView;
-  if (wX) {
-    wXVectorView = GSLTemplateTypeAlias<T>::vector_view_from_array(wX, L);
-    wXVector = &(wXVectorView.vector);
-  }
-  approximate(&(covDiagView.vector), L, N, bMax, &(xFlat.vector), wXVector,
-              result, options);
-  return true;
+template <typename T>
+void gm_to_dirac_short<T>::modified_van_mises_distance_sq(const T* covDiag,
+                                                          T* distance, size_t L,
+                                                          size_t N, size_t bMax,
+                                                          T* x, const T* wX) {
+  GSLVectorView<T> vectorViewX(x, L * N);
+  GSLVectorView<T> vectorViewWX(wX, L);
+  GSLVectorView<T> vectorViewCovDiag(covDiag, N);
+  return modified_van_mises_distance_sq(vectorViewCovDiag, distance, L, N, bMax,
+                                        vectorViewX, vectorViewWX);
+}
+
+template <typename T>
+void gm_to_dirac_short<T>::modified_van_mises_distance_sq_derivative(
+    const T* covDiag, T* gradient, size_t L, size_t N, size_t bMax, T* x,
+    const T* wX) {
+  GSLVectorView<T> vectorViewX(x, L * N);
+  GSLVectorView<T> vectorViewWX(wX, L);
+  GSLVectorView<T> vectorViewCovDiag(covDiag, N);
+  GSLVectorView<T> vectorViewGradient(gradient, L * N);
+  return modified_van_mises_distance_sq_derivative(
+      vectorViewCovDiag, vectorViewGradient, L, N, bMax, vectorViewX,
+      vectorViewWX);
 }
 
 template <typename T>
@@ -52,9 +70,31 @@ bool gm_to_dirac_short<T>::approximate(const GSLVectorType* covDiag, size_t L,
                                        const ApproximateOptions& options) {
   assert(x->size1 == L);
   assert(x->size2 == N);
-  GSLVectorViewType xFlat =
-      GSLTemplateTypeAlias<T>::flatten_matrix_to_vector(x);
-  return approximate(covDiag, L, N, bMax, &(xFlat.vector), wX, result, options);
+  GSLVectorView<T> vectorViewX(x);
+  return approximate(covDiag, L, N, bMax, vectorViewX, wX, result, options);
+}
+
+template <typename T>
+void gm_to_dirac_short<T>::modified_van_mises_distance_sq(
+    const GSLVectorType* covDiag, T* distance, size_t L, size_t N, size_t bMax,
+    GSLMatrixType* x, const GSLVectorType* wX) {
+  assert(x->size1 == L);
+  assert(x->size2 == N);
+  GSLVectorView<T> vectorViewX(x);
+  return modified_van_mises_distance_sq(covDiag, distance, L, N, bMax,
+                                        vectorViewX, wX);
+}
+
+template <typename T>
+void gm_to_dirac_short<T>::modified_van_mises_distance_sq_derivative(
+    const GSLVectorType* covDiag, GSLMatrixType* gradient, size_t L, size_t N,
+    size_t bMax, GSLMatrixType* x, const GSLVectorType* wX) {
+  assert(x->size1 == L);
+  assert(x->size2 == N);
+  GSLVectorView<T> vectorViewX(x);
+  GSLVectorView<T> vectorViewGradient(gradient);
+  return modified_van_mises_distance_sq_derivative(covDiag, vectorViewGradient,
+                                                   L, N, bMax, vectorViewX, wX);
 }
 
 template <typename T>
@@ -155,17 +195,8 @@ bool gm_to_dirac_short<double>::approximate(const gsl_vector* covDiag, size_t L,
     gsl_rng_free(r);
   }
 
-  const gsl_vector* localWX;
-  const bool freeWx = wX == nullptr;
-  if (freeWx) {
-    gsl_vector* tmpWx = gsl_vector_alloc(L);
-    gsl_vector_set_all(tmpWx, 1.00 / static_cast<double>(L));
-    localWX = tmpWx;
-  } else {
-    localWX = wX;
-  }
-
-  GMToDiracConstWeightOptimizationParams params(covDiag, localWX, N, L, bMax,
+  GSLWeightHelper<double> wXHelper(wX, L);
+  GMToDiracConstWeightOptimizationParams params(covDiag, wXHelper, N, L, bMax,
                                                 c_b(bMax));
 
   gsl_minimizer gslMinimizer(
@@ -177,9 +208,63 @@ bool gm_to_dirac_short<double>::approximate(const gsl_vector* covDiag, size_t L,
 
   correctMean(x, params.wX, L, N);
 
-  if (freeWx) gsl_vector_free(const_cast<gsl_vector*>(localWX));
-
   return status == GSL_SUCCESS;
+}
+
+template <>
+void gm_to_dirac_short<float>::modified_van_mises_distance_sq(
+    const gsl_vector_float* covDiag, float* distance, size_t L, size_t N,
+    size_t bMax, gsl_vector_float* x, const gsl_vector_float* wX) {
+  double distanceDouble = 0.00;
+  GSLVectorView<double> vectorViewCovDiag(covDiag, L * N);
+  GSLVectorView<double> vectorViewX(x, L * N);
+  GSLVectorView<double> vectorViewWX(wX, L);
+  gm_to_dirac_short<double> doubleApprox;
+  doubleApprox.modified_van_mises_distance_sq(vectorViewCovDiag,
+                                              &distanceDouble, L, N, bMax,
+                                              vectorViewX, vectorViewWX);
+  *distance = static_cast<float>(distanceDouble);
+}
+
+template <>
+void gm_to_dirac_short<double>::modified_van_mises_distance_sq(
+    const gsl_vector* covDiag, double* distance, size_t L, size_t N,
+    size_t bMax, gsl_vector* x, const gsl_vector* wX) {
+  GSLWeightHelper<double> wXHelper(wX, L);
+  GMToDiracConstWeightOptimizationParams optiParams =
+      GMToDiracConstWeightOptimizationParams(covDiag, wXHelper, N, L, bMax,
+                                             c_b(bMax));
+  *distance = modified_van_mises_distance_sq(x, &optiParams);
+}
+
+template <>
+void gm_to_dirac_short<float>::modified_van_mises_distance_sq_derivative(
+    const gsl_vector_float* covDiag, gsl_vector_float* gradient, size_t L,
+    size_t N, size_t bMax, gsl_vector_float* x, const gsl_vector_float* wX) {
+  gsl_vector* gradientDouble = gsl_vector_alloc(gradient->size);
+
+  GSLVectorView<double> vectorViewCovDiag(covDiag, N);
+  GSLVectorView<double> vectorViewX(x, L * N);
+  GSLVectorView<double> vectorViewWX(wX, L);
+  gm_to_dirac_short<double> doubleApprox;
+  doubleApprox.modified_van_mises_distance_sq_derivative(
+      vectorViewCovDiag, gradientDouble, L, N, bMax, vectorViewX, vectorViewWX);
+
+  for (size_t i = 0; i < gradient->size; i++)
+    gradient->data[i] = static_cast<float>(gradientDouble->data[i]);
+
+  gsl_vector_free(gradientDouble);
+}
+
+template <>
+void gm_to_dirac_short<double>::modified_van_mises_distance_sq_derivative(
+    const gsl_vector* covDiag, gsl_vector* gradient, size_t L, size_t N,
+    size_t bMax, gsl_vector* x, const gsl_vector* wX) {
+  GSLWeightHelper<double> wXHelper(wX, L);
+  GMToDiracConstWeightOptimizationParams optiParams =
+      GMToDiracConstWeightOptimizationParams(covDiag, wXHelper, N, L, bMax,
+                                             c_b(bMax));
+  modified_van_mises_distance_sq_derivative(x, &optiParams, gradient);
 }
 
 template class gm_to_dirac_short<double>;

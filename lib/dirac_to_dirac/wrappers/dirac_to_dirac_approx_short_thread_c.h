@@ -30,6 +30,23 @@ DLL_EXPORT bool dirac_to_dirac_approx_short_thread_double_approximate(
                           options ? *options : ApproximateOptions{});
 }
 
+DLL_EXPORT void
+dirac_to_dirac_approx_short_thread_double_modified_van_mises_distance_sq(
+    void* instance, double* distance, const double* y, size_t M, size_t L,
+    size_t N, size_t bMax, double* x, const double* wX, const double* wY) {
+  auto* obj =
+      static_cast<dirac_to_dirac_approx_short_thread<double>*>(instance);
+  obj->modified_van_mises_distance_sq(distance, y, M, L, N, bMax, x, wX, wY);
+}
+
+DLL_EXPORT void
+dirac_to_dirac_approx_short_thread_double_modified_van_mises_distance_sq_derivative(
+    void* instance, double* gradient, const double* y, size_t M, size_t L,
+    size_t N, size_t bMax, double* x, const double* wX, const double* wY) {
+  auto* obj = static_cast<dirac_to_dirac_approx_short_thread<double>*>(instance);
+  obj->modified_van_mises_distance_sq_derivative(gradient, y, M, L, N, bMax, x, wX, wY);
+}
+
 DLL_EXPORT void* create_dirac_to_dirac_approx_short_thread_float() {
   return new dirac_to_dirac_approx_short_thread<float>();
 }
@@ -46,6 +63,22 @@ DLL_EXPORT bool dirac_to_dirac_approx_short_thread_float_approximate(
   auto* obj = static_cast<dirac_to_dirac_approx_short_thread<float>*>(instance);
   return obj->approximate(y, M, L, N, bMax, x, wX, wY, result,
                           options ? *options : ApproximateOptions{});
+}
+
+DLL_EXPORT void
+dirac_to_dirac_approx_short_thread_float_modified_van_mises_distance_sq(
+    void* instance, float* distance, const float* y, size_t M, size_t L,
+    size_t N, size_t bMax, float* x, const float* wX, const float* wY) {
+  auto* obj = static_cast<dirac_to_dirac_approx_short_thread<float>*>(instance);
+  obj->modified_van_mises_distance_sq(distance, y, M, L, N, bMax, x, wX, wY);
+}
+
+DLL_EXPORT void
+dirac_to_dirac_approx_short_thread_float_modified_van_mises_distance_sq_derivative(
+    void* instance, float* gradient, const float* y, size_t M, size_t L,
+    size_t N, size_t bMax, float* x, const float* wX, const float* wY) {
+  auto* obj = static_cast<dirac_to_dirac_approx_short_thread<float>*>(instance);
+  obj->modified_van_mises_distance_sq_derivative(gradient, y, M, L, N, bMax, x, wX, wY);
 }
 
 }  // extern "C"

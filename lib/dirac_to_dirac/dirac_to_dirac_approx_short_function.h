@@ -32,6 +32,29 @@ class dirac_to_dirac_approx_short_function
   // clang-format on
 
   // clang-format off
+  void modified_van_mises_distance_sq(T* distance,
+                                      const T *y,
+                                      size_t M,
+                                      size_t L,
+                                      size_t N,
+                                      size_t bMax,
+                                      T *x,
+                                      wXf wXcallback,
+                                      wXd wXDcallback) override;
+  // clang-format on
+
+  // clang-format off
+  void modified_van_mises_distance_sq_derivative(T* gradient,
+                                                 const T *y,
+                                                 size_t M,
+                                                 size_t L,
+                                                 size_t N,
+                                                 size_t bMax,
+                                                 T *x,
+                                                 wXf wXcallback,
+                                                 wXd wXDcallback) override;
+
+  // clang-format off
   bool approximate(const GSLVectorType* y,
                     size_t L,
                     size_t N,
@@ -44,6 +67,28 @@ class dirac_to_dirac_approx_short_function
   // clang-format on
 
   // clang-format off
+  void modified_van_mises_distance_sq(T* distance,
+                                      const GSLVectorType *y,
+                                      size_t L,
+                                      size_t N,
+                                      size_t bMax,
+                                      GSLVectorType *x,
+                                      wXf wXcallback,
+                                      wXd wXDcallback) override;
+  // clang-format on
+
+  // clang-format off
+  void modified_van_mises_distance_sq_derivative(GSLMatrixType* gradient,
+                                                 const GSLVectorType *y,
+                                                 size_t L,
+                                                 size_t N,
+                                                 size_t bMax,
+                                                 GSLVectorType *x,
+                                                 wXf wXcallback,
+                                                 wXd wXDcallback) override;
+  // clang-format on
+
+  // clang-format off
   bool approximate(GSLMatrixType* y,
                     size_t L,
                     size_t bMax,
@@ -52,6 +97,26 @@ class dirac_to_dirac_approx_short_function
                     wXd wXDeriv,
                     GslminimizerResult* result = nullptr,
                     const ApproximateOptions& options = ApproximateOptions{}) override;
+  // clang-format on
+
+  // clang-format off
+  void modified_van_mises_distance_sq(T* distance,
+                                      GSLMatrixType *y,
+                                      size_t L,
+                                      size_t bMax,
+                                      GSLMatrixType *x,
+                                      wXf wXcallback,
+                                      wXd wXDcallback) override;
+  // clang-format on
+
+  // clang-format off
+  void modified_van_mises_distance_sq_derivative(GSLMatrixType* gradient,
+                                                 GSLMatrixType *y,
+                                                 size_t L,
+                                                 size_t bMax,
+                                                 GSLMatrixType *x,
+                                                 wXf wXcallback,
+                                                 wXd wXDcallback) override;
   // clang-format on
 
  private:
@@ -74,6 +139,24 @@ bool dirac_to_dirac_approx_short_function<double>::approximate(
     const gsl_vector* y, size_t L, size_t N, size_t bMax, gsl_vector* x,
     wXf wXcallback, wXd wXDcallback, GslminimizerResult* result,
     const ApproximateOptions& options);
+
+template <>
+void dirac_to_dirac_approx_short_function<
+    double>::modified_van_mises_distance_sq(double* distance,
+                                            const gsl_vector* y, size_t L,
+                                            size_t N, size_t bMax,
+                                            gsl_vector* x, wXf wXcallback,
+                                            wXd wXDcallback);
+
+template <>
+void dirac_to_dirac_approx_short_function<
+    double>::modified_van_mises_distance_sq_derivative(gsl_matrix* gradient,
+                                                       const gsl_vector* y,
+                                                       size_t L, size_t N,
+                                                       size_t bMax,
+                                                       gsl_vector* x,
+                                                       wXf wXcallback,
+                                                       wXd wXDcallback);
 
 extern template class dirac_to_dirac_approx_short_function<double>;
 
