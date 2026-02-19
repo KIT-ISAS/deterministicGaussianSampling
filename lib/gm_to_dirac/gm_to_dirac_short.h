@@ -15,35 +15,95 @@ class gm_to_dirac_short : public gm_to_dirac_approx_i<T> {
 
   // clang-format off
   bool approximate(const T* covDiag,
-                    size_t L,
-                    size_t N,
-                    size_t bMax,
-                    T* x,
-                    const T* wX = nullptr,
-                    GslminimizerResult* result = nullptr,
-                    const ApproximateOptions& options = ApproximateOptions{}) override;
+                   size_t L,
+                   size_t N,
+                   size_t bMax,
+                   T* x,
+                   const T* wX = nullptr,
+                   GslminimizerResult* result = nullptr,
+                   const ApproximateOptions& options = ApproximateOptions{}) override;
+  // clang-format on
+
+  // clang-format off
+  void modified_van_mises_distance_sq(const T* covDiag,
+                                      T* distance,
+                                      size_t L,
+                                      size_t N,
+                                      size_t bMax,
+                                      T* x,
+                                      const T* wX) override;
+  // clang-format on              
+                
+  // clang-format off
+  void modified_van_mises_distance_sq_derivative(const T* covDiag,
+                                                 T* gradient,
+                                                 size_t L,
+                                                 size_t N,
+                                                 size_t bMax,
+                                                 T* x,
+                                                 const T* wX) override;
   // clang-format on
 
   // clang-format off
   bool approximate(const GSLVectorType* covDiag,
-                    size_t L,
-                    size_t N,
-                    size_t bMax,
-                    GSLVectorType* x,
-                    const GSLVectorType* wX = nullptr,
-                    GslminimizerResult* result = nullptr,
-                    const ApproximateOptions& options = ApproximateOptions{}) override;
+                   size_t L,
+                   size_t N,
+                   size_t bMax,
+                   GSLVectorType* x,
+                   const GSLVectorType* wX = nullptr,
+                   GslminimizerResult* result = nullptr,
+                   const ApproximateOptions& options = ApproximateOptions{}) override;
+  // clang-format on
+
+  // clang-format off
+  void modified_van_mises_distance_sq(const GSLVectorType* covDiag,
+                                      T* distance,
+                                      size_t L,
+                                      size_t N,
+                                      size_t bMax,
+                                      GSLVectorType* x,
+                                      const GSLVectorType* wX) override;
+  // clang-format on
+
+  // clang-format off
+  void modified_van_mises_distance_sq_derivative(const GSLVectorType* covDiag,
+                                                 GSLVectorType* gradient,
+                                                 size_t L,
+                                                 size_t N,
+                                                 size_t bMax,
+                                                 GSLVectorType* x,
+                                                 const GSLVectorType* wX) override;
   // clang-format on
 
   // clang-format off
   bool approximate(const GSLVectorType* covDiag,
-                    size_t L,
-                    size_t N,
-                    size_t bMax,
-                    GSLMatrixType* x,
-                    const GSLVectorType* wX = nullptr,
-                    GslminimizerResult* result = nullptr,
-                    const ApproximateOptions& options = ApproximateOptions{}) override;
+                   size_t L,
+                   size_t N,
+                   size_t bMax,
+                   GSLMatrixType* x,
+                   const GSLVectorType* wX = nullptr,
+                   GslminimizerResult* result = nullptr,
+                   const ApproximateOptions& options = ApproximateOptions{}) override;
+  // clang-format on
+
+  // clang-format off
+  void modified_van_mises_distance_sq(const GSLVectorType* covDiag,
+                                      T* distance,
+                                      size_t L,
+                                      size_t N,
+                                      size_t bMax,
+                                      GSLMatrixType* x,
+                                      const GSLVectorType* wX) override;
+  // clang-format on
+
+  // clang-format off
+  void modified_van_mises_distance_sq_derivative(const GSLVectorType* covDiag,
+                                                 GSLMatrixType* gradient,
+                                                 size_t L,
+                                                 size_t N,
+                                                 size_t bMax,
+                                                 GSLMatrixType* x,
+                                                 const GSLVectorType* wX) override;
   // clang-format on
 
  private:
@@ -74,6 +134,12 @@ class gm_to_dirac_short : public gm_to_dirac_approx_i<T> {
   FRIEND_TEST(
       gm_to_dirac_approx_short_test_modified_van_mises_distance_sq_derivative,
       parameterized_test_modified_van_mises_distance_sq_derivative);
+  FRIEND_TEST(
+      gm_to_dirac_approx_short_test_modified_van_mises_distance_sq_derivative,
+      parameterized_test_modified_van_mises_distance_sq_derivative_wrapper_distance);
+  FRIEND_TEST(
+      gm_to_dirac_approx_short_test_modified_van_mises_distance_sq_derivative,
+      parameterized_test_modified_van_mises_distance_sq_derivative_wrapper_gradient);
 };
 
 #include "gm_to_dirac_short.tpp"
@@ -92,6 +158,26 @@ bool gm_to_dirac_short<double>::approximate(const gsl_vector* covDiag, size_t L,
                                             gsl_vector* x, const gsl_vector* wX,
                                             GslminimizerResult* result,
                                             const ApproximateOptions& options);
+
+template <>
+void gm_to_dirac_short<float>::modified_van_mises_distance_sq(
+    const gsl_vector_float* covDiag, float* distance, size_t L, size_t N,
+    size_t bMax, gsl_vector_float* x, const gsl_vector_float* wX);
+
+template <>
+void gm_to_dirac_short<double>::modified_van_mises_distance_sq(
+    const gsl_vector* covDiag, double* distance, size_t L, size_t N,
+    size_t bMax, gsl_vector* x, const gsl_vector* wX);
+
+template <>
+void gm_to_dirac_short<float>::modified_van_mises_distance_sq_derivative(
+    const gsl_vector_float* covDiag, gsl_vector_float* gradient, size_t L,
+    size_t N, size_t bMax, gsl_vector_float* x, const gsl_vector_float* wX);
+
+template <>
+void gm_to_dirac_short<double>::modified_van_mises_distance_sq_derivative(
+    const gsl_vector* covDiag, gsl_vector* gradient, size_t L, size_t N,
+    size_t bMax, gsl_vector* x, const gsl_vector* wX);
 
 extern template class gm_to_dirac_short<double>;
 extern template class gm_to_dirac_short<float>;

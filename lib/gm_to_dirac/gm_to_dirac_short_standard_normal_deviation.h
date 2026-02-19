@@ -1,8 +1,6 @@
 #ifndef GM_TO_DIRAC_SHORT_STANDARD_NORMAL_DEVIATION_H
 #define GM_TO_DIRAC_SHORT_STANDARD_NORMAL_DEVIATION_H
 
-#include <gtest/gtest.h>
-
 #include "gm_to_dirac_approx_standard_normal_distribution_i.h"
 #include "gm_to_dirac_optimization_params.h"
 
@@ -13,41 +11,92 @@ class gm_to_dirac_short_standard_normal_deviation
   using GSLVectorType =
       typename gm_to_dirac_approx_standard_normal_distribution_i<
           T>::GSLVectorType;
-  using GSLVectorViewType =
-      typename gm_to_dirac_approx_standard_normal_distribution_i<
-          T>::GSLVectorViewType;
   using GSLMatrixType =
       typename gm_to_dirac_approx_standard_normal_distribution_i<
           T>::GSLMatrixType;
 
   // clang-format off
   bool approximate(size_t L,
-                    size_t N,
-                    size_t bMax,
-                    T* x,
-                    const T* wX,
-                    GslminimizerResult* result = nullptr,
-                    const ApproximateOptions& options = ApproximateOptions{}) override;
+                   size_t N,
+                   size_t bMax,
+                   T* x,
+                   const T* wX,
+                   GslminimizerResult* result = nullptr,
+                   const ApproximateOptions& options = ApproximateOptions{}) override;
+  // clang-format on
+              
+  // clang-format off
+  void modified_van_mises_distance_sq(T* distance,
+                                      size_t L,
+                                      size_t N,
+                                      size_t bMax,
+                                      T* x,
+                                      const T* wX) override;
+  // clang-format on              
+                
+  // clang-format off
+  void modified_van_mises_distance_sq_derivative(T* gradient,
+                                                 size_t L,
+                                                 size_t N,
+                                                 size_t bMax,
+                                                 T* x,
+                                                 const T* wX) override;
+  // clang-format on
+                            
+  // clang-format off
+  bool approximate(size_t L,
+                   size_t N,
+                   size_t bMax,
+                   GSLVectorType* x,
+                   const GSLVectorType* wX = nullptr,
+                   GslminimizerResult* result = nullptr,
+                   const ApproximateOptions& options = ApproximateOptions{}) override;
+  // clang-format on
+    
+  // clang-format off
+  void modified_van_mises_distance_sq(T* distance,
+                                      size_t L,
+                                      size_t N,
+                                      size_t bMax,
+                                      GSLVectorType* x,
+                                      const GSLVectorType* wX) override;
+  // clang-format on
+    
+  // clang-format off
+  void modified_van_mises_distance_sq_derivative(GSLVectorType* gradient,
+                                                 size_t L,
+                                                 size_t N,
+                                                 size_t bMax,
+                                                 GSLVectorType* x,
+                                                 const GSLVectorType* wX) override;
   // clang-format on
 
   // clang-format off
   bool approximate(size_t L,
-                    size_t N,
-                    size_t bMax,
-                    GSLVectorType* x,
-                    const GSLVectorType* wX = nullptr,
-                    GslminimizerResult* result = nullptr,
-                    const ApproximateOptions& options = ApproximateOptions{}) override;
+                   size_t N,
+                   size_t bMax,
+                   GSLMatrixType* x,
+                   const GSLVectorType* wX = nullptr,
+                   GslminimizerResult* result = nullptr,
+                   const ApproximateOptions& options = ApproximateOptions{}) override;
   // clang-format on
 
   // clang-format off
-  bool approximate(size_t L,
-                    size_t N,
-                    size_t bMax,
-                    GSLMatrixType* x,
-                    const GSLVectorType* wX = nullptr,
-                    GslminimizerResult* result = nullptr,
-                    const ApproximateOptions& options = ApproximateOptions{}) override;
+  void modified_van_mises_distance_sq(T* distance,
+                                      size_t L,
+                                      size_t N,
+                                      size_t bMax,
+                                      GSLMatrixType* x,
+                                      const GSLVectorType* wX) override;
+  // clang-format on
+
+  // clang-format off
+  void modified_van_mises_distance_sq_derivative(GSLMatrixType* gradient,
+                                                 size_t L,
+                                                 size_t N,
+                                                 size_t bMax,
+                                                 GSLMatrixType* x,
+                                                 const GSLVectorType* wX) override;
   // clang-format on
 };
 

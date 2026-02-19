@@ -85,7 +85,7 @@ static const long long maxN = 25;
 static const long long minN = 1;
 static const long long stepN = 1;
 
-static void D_E_CustomArguments(benchmark::internal::Benchmark* b) {
+static void D_E_CustomArguments(benchmark::Benchmark* b) {
   for (int L = minL; L <= maxL; L += stepL)
     for (int N = minN; N <= maxN; N += stepN) b->Args({L, N});
 }

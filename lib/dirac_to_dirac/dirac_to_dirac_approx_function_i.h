@@ -15,7 +15,7 @@
  * @brief interface for the gausian mixture to dirac approximation with a custom
  * weight function
  *
- * @tparam T type of the vector (float, double, long double)
+ * @tparam T type of the vector (float, double)
  */
 template <typename T>
 class dirac_to_dirac_approx_function_i {
@@ -49,6 +49,43 @@ class dirac_to_dirac_approx_function_i {
                            const ApproximateOptions& options) = 0;
 
   /**
+   * @brief calculate modified van mises distance based on x and y
+   *
+   * @param distance pointer to distance value to be calculated
+   * @param y input data points
+   * @param M number of elements in y
+   * @param L number of elements in x
+   * @param N dimension of the data
+   * @param bMax bMax
+   * @param x input data points
+   * @param wXcallback callback for the weight function
+   * @param wXDcallback callback for the gradient of the weight function
+   * @return true, on success, false otherwise
+   */
+  virtual void modified_van_mises_distance_sq(T* distance, const T* y, size_t M,
+                                              size_t L, size_t N, size_t bMax,
+                                              T* x, wXf wXcallback,
+                                              wXd wXDcallback) = 0;
+
+  /**
+   * @brief calculate modified van mises distance based on x and y
+   *
+   * @param gradient pointer to gradient to be calculated
+   * @param y input data points
+   * @param M number of elements in y
+   * @param L number of elements in x
+   * @param N dimension of the data
+   * @param bMax bMax
+   * @param x input data points
+   * @param wXcallback callback for the weight function
+   * @param wXDcallback callback for the gradient of the weight function
+   * @return true, on success, false otherwise
+   */
+  virtual void modified_van_mises_distance_sq_derivative(
+      T* gradient, const T* y, size_t M, size_t L, size_t N, size_t bMax, T* x,
+      wXf wXcallback, wXd wXDcallback) = 0;
+
+  /**
    * @brief reduce the data points using gsl vectors
    *
    * @param y input data points
@@ -68,6 +105,42 @@ class dirac_to_dirac_approx_function_i {
                            const ApproximateOptions& options) = 0;
 
   /**
+   * @brief calculate modified van mises distance based on x and y
+   *
+   * @param distance pointer to distance value to be calculated
+   * @param y input data points
+   * @param L number of elements in x
+   * @param N dimension of the data
+   * @param bMax bMax
+   * @param x input data points
+   * @param wXcallback callback for the weight function
+   * @param wXDcallback callback for the gradient of the weight function
+   * @return true, on success, false otherwise
+   */
+  virtual void modified_van_mises_distance_sq(T* distance,
+                                              const GSLVectorType* y, size_t L,
+                                              size_t N, size_t bMax,
+                                              GSLVectorType* x, wXf wXcallback,
+                                              wXd wXDcallback) = 0;
+
+  /**
+   * @brief calculate modified van mises distance based on x and y
+   *
+   * @param gradient pointer to gradient to be calculated
+   * @param y input data points
+   * @param L number of elements in x
+   * @param N dimension of the data
+   * @param bMax bMax
+   * @param x input data points
+   * @param wXcallback callback for the weight function
+   * @param wXDcallback callback for the gradient of the weight function
+   * @return true, on success, false otherwise
+   */
+  virtual void modified_van_mises_distance_sq_derivative(
+      GSLMatrixType* gradient, const GSLVectorType* y, size_t L, size_t N,
+      size_t bMax, GSLVectorType* x, wXf wXcallback, wXd wXDcallback) = 0;
+
+  /**
    * @brief reduce the data points using gsl matricies where possible
    *
    * @param y input data points
@@ -84,6 +157,39 @@ class dirac_to_dirac_approx_function_i {
                            GSLMatrixType* x, wXf wXcallback, wXd wXDcallback,
                            GslminimizerResult* result,
                            const ApproximateOptions& options) = 0;
+
+  /**
+   * @brief calculate modified van mises distance based on x and y
+   *
+   * @param distance pointer to distance value to be calculated
+   * @param y input data points
+   * @param L number of elements in x
+   * @param bMax bMax
+   * @param x input data points
+   * @param wXcallback callback for the weight function
+   * @param wXDcallback callback for the gradient of the weight function
+   * @return true, on success, false otherwise
+   */
+  virtual void modified_van_mises_distance_sq(T* distance, GSLMatrixType* y,
+                                              size_t L, size_t bMax,
+                                              GSLMatrixType* x, wXf wXcallback,
+                                              wXd wXDcallback) = 0;
+
+  /**
+   * @brief calculate modified van mises distance based on x and y
+   *
+   * @param gradient pointer to gradient to be calculated
+   * @param y input data points
+   * @param L number of elements in x
+   * @param bMax bMax
+   * @param x input data points
+   * @param wXcallback callback for the weight function
+   * @param wXDcallback callback for the gradient of the weight function
+   * @return true, on success, false otherwise
+   */
+  virtual void modified_van_mises_distance_sq_derivative(
+      GSLMatrixType* gradient, GSLMatrixType* y, size_t L, size_t bMax,
+      GSLMatrixType* x, wXf wXcallback, wXd wXDcallback) = 0;
 };
 
 #endif  // DIRAC_TO_DIRAC_APPROX_FUNCTION_I_H

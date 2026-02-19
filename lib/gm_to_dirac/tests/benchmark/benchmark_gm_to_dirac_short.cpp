@@ -119,13 +119,13 @@ static const long long minAcc = 60;
 static const long long maxAcc = 130;
 
 static void gm_to_dirac_short_CustomArguments_LN(
-    benchmark::internal::Benchmark* b) {
+    benchmark::Benchmark* b) {
   for (int L = minL; L <= maxL; L += stepL)
     for (int N = minN; N <= maxN; N += stepN) b->Args({L, N});
 }
 
 static void gm_to_dirac_short_CustomArguments_N(
-    benchmark::internal::Benchmark* b) {
+    benchmark::Benchmark* b) {
   for (int N = minN; N <= maxN; N += stepN) b->Args({N});
 }
 

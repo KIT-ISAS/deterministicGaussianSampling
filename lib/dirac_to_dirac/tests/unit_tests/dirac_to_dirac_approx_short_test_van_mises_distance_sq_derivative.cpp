@@ -6,6 +6,7 @@
 #include "dirac_to_dirac_test_case_params.h"
 #include "gradient_van_mises_distance_sq_const_weight.h"
 #include "gsl_utils_allocation.h"
+#include "gsl_utils_view_helper.h"
 #include "gtest_compare_vec.h"
 
 class dirac_to_dirac_approx_short_test_modified_van_mises_distance_sq_derivative
@@ -56,6 +57,10 @@ class dirac_to_dirac_approx_short_test_modified_van_mises_distance_sq_derivative
       gradVanMisesDistanceSqConstWeight;
 };
 
+gradient_van_mises_distance_sq_const_weight
+    dirac_to_dirac_approx_short_test_modified_van_mises_distance_sq_derivative::
+        gradVanMisesDistanceSqConstWeight;
+
 TEST_P(
     dirac_to_dirac_approx_short_test_modified_van_mises_distance_sq_derivative,
     parameterized_test_modified_van_mises_distance_sq_derivative) {
@@ -74,6 +79,50 @@ TEST_P(
                                                            analyticalGrad);
     ASSERT_TRUE(assert_gsl_vectors_close(analyticalGrad, numericalGrad, eps));
   }
+}
+
+TEST_P(
+    dirac_to_dirac_approx_short_test_modified_van_mises_distance_sq_derivative,
+    parameterized_test_modified_van_mises_distance_sq_derivative_wrapper_distance) {
+  DiracToDiracTestCaseParams p = GetParam();
+
+  const double c_b = dirac_to_dirac_approx_short<double>::c_b(p.bMax);
+  DiracToDiracConstWeightOptimizationParams params(y, p.N, p.M, p.L, p.bMax,
+                                                   c_b);
+
+  // wrapper
+  double distance_wrapper = 0;
+  auto d2d = dirac_to_dirac_approx_short<double>();
+  d2d.modified_van_mises_distance_sq(&distance_wrapper, y, p.L, p.N, p.bMax, x);
+  // internal impl
+  double distance_internal = 1;
+  distance_internal =
+      dirac_to_dirac_approx_short<double>::modified_van_mises_distance_sq(
+          x, &params);
+
+  ASSERT_TRUE(distance_wrapper == distance_internal);
+}
+
+TEST_P(
+    dirac_to_dirac_approx_short_test_modified_van_mises_distance_sq_derivative,
+    parameterized_test_modified_van_mises_distance_sq_derivative_wrapper_gradient) {
+  DiracToDiracTestCaseParams p = GetParam();
+
+  const double c_b = dirac_to_dirac_approx_short<double>::c_b(p.bMax);
+  DiracToDiracConstWeightOptimizationParams params(y, p.N, p.M, p.L, p.bMax,
+                                                   c_b);
+
+  // wrapper
+  auto d2d = dirac_to_dirac_approx_short<double>();
+  GSLMatrixView<double> numericalGradView(numericalGrad, p.L, p.N);
+  d2d.modified_van_mises_distance_sq_derivative(numericalGradView, y, p.L, p.N,
+                                                p.bMax, x);
+
+  // internal impl
+  dirac_to_dirac_approx_short<
+      double>::modified_van_mises_distance_sq_derivative(x, &params,
+                                                         analyticalGrad);
+  ASSERT_TRUE(assert_gsl_vectors_close(analyticalGrad, numericalGrad, eps));
 }
 
 INSTANTIATE_TEST_SUITE_P(

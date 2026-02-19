@@ -137,7 +137,7 @@ static const float minRatioMN = 100.0f;
 static const float maxRatioMN = 100.0f;
 static const float stepRatioMN = 10.0f;
 
-static void D2D_CustomArguments(benchmark::internal::Benchmark* b) {
+static void D2D_CustomArguments(benchmark::Benchmark* b) {
   for (float MN = minRatioMN; MN <= maxRatioMN; MN += stepRatioMN)
     for (float M = minM; M <= maxM; M += stepM)
       for (float N = minN; N <= maxN; N += stepN)

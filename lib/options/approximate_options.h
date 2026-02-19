@@ -14,4 +14,4 @@ struct ApproximateOptions {
   bool verbose = false;          // True if verbose output is needed
 };
 
-#endif
+#endif // APPROXIMATE_OPTIONS_H

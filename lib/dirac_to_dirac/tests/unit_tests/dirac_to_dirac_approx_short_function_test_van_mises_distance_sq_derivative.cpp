@@ -83,6 +83,10 @@ class
       gradVanMisesDistanceSqDynamicWeight;
 };
 
+gradient_van_mises_distance_sq_dynamic_weight
+dirac_to_dirac_approx_short_function_test_modified_van_mises_distance_sq_derivative::
+    gradVanMisesDistanceSqDynamicWeight;
+
 static double wXcallbackWrapper(const gsl_vector* x, void* params) {
   DiracToDiracVariableWeightOptimizationParams* p =
       static_cast<DiracToDiracVariableWeightOptimizationParams*>(params);

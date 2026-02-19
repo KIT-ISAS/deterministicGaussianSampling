@@ -19,6 +19,10 @@ class GSLTemplateTypeAlias {
       typename std::conditional<std::is_same<T, double>::value, gsl_matrix,
                                 gsl_matrix_float>::type;
 
+  using MatrixViewType =
+      typename std::conditional<std::is_same<T, double>::value, gsl_matrix_view,
+                                gsl_matrix_float_view>::type;
+
   using VectorType =
       typename std::conditional<std::is_same<T, double>::value, gsl_vector,
                                 gsl_vector_float>::type;
@@ -60,6 +64,18 @@ class GSLTemplateTypeAlias {
       gsl_vector_free(v);
     } else {
       gsl_vector_float_free(v);
+    }
+  }
+
+  // Static method to create a matrix view from a raw pointer
+  static MatrixViewType matrix_view_from_array(const T* data, size_t size1, size_t size2) {
+    return matrix_view_from_array(const_cast<T*>(data), size1, size2);
+  }
+  static MatrixViewType matrix_view_from_array(T* data, size_t size1, size_t size2) {
+    if constexpr (std::is_same<T, double>::value) {
+      return gsl_matrix_view_array(data, size1, size2);
+    } else {
+      return gsl_matrix_float_view_array(data, size1, size2);
     }
   }
 

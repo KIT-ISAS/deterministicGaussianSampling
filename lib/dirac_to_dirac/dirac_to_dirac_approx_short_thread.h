@@ -12,41 +12,108 @@ class dirac_to_dirac_approx_short_thread : public dirac_to_dirac_approx_i<T> {
   using GSLVectorViewType =
       typename dirac_to_dirac_approx_i<T>::GSLVectorViewType;
   using GSLMatrixType = typename dirac_to_dirac_approx_i<T>::GSLMatrixType;
+  using GSLMatrixViewType = typename dirac_to_dirac_approx_i<T>::GSLMatrixViewType;
 
   // clang-format off
     bool approximate(const T* y,
-                      size_t M,
-                      size_t L,
-                      size_t N,
-                      size_t bMax,
-                      T* x,
-                      const T* wX = nullptr,
-                      const T* wY = nullptr,
-                      GslminimizerResult* result = nullptr,
-                      const ApproximateOptions& options = ApproximateOptions{}) override;
+                     size_t M,
+                     size_t L,
+                     size_t N,
+                     size_t bMax,
+                     T* x,
+                     const T* wX = nullptr,
+                     const T* wY = nullptr,
+                     GslminimizerResult* result = nullptr,
+                     const ApproximateOptions& options = ApproximateOptions{}) override;
+  // clang-format on
+
+  // clang-format off
+    void modified_van_mises_distance_sq(T* distance,
+                                        const T *y,
+                                        size_t M,
+                                        size_t L,
+                                        size_t N,
+                                        size_t bMax,
+                                        T *x,
+                                        const T *wX = nullptr,
+                                        const T *wY = nullptr) override;
+  // clang-format on
+
+  // clang-format off
+    void modified_van_mises_distance_sq_derivative(T* gradient,
+                                                   const T *y,
+                                                   size_t M,
+                                                   size_t L,
+                                                   size_t N,
+                                                   size_t bMax,
+                                                   T *x,
+                                                   const T *wX = nullptr,
+                                                   const T *wY = nullptr) override;
   // clang-format on
 
   // clang-format off
     bool approximate(const GSLVectorType* y,
-                      size_t L,
-                      size_t N,
-                      size_t bMax,
-                      GSLVectorType* x,
-                      const GSLVectorType* wX = nullptr,
-                      const GSLVectorType* wY = nullptr,
-                      GslminimizerResult* result = nullptr,
-                      const ApproximateOptions& options = ApproximateOptions{}) override;
+                     size_t L,
+                     size_t N,
+                     size_t bMax,
+                     GSLVectorType* x,
+                     const GSLVectorType* wX = nullptr,
+                     const GSLVectorType* wY = nullptr,
+                     GslminimizerResult* result = nullptr,
+                     const ApproximateOptions& options = ApproximateOptions{}) override;
+  // clang-format on
+
+  // clang-format off
+    void modified_van_mises_distance_sq(T* distance,
+                                        const GSLVectorType *y,
+                                        size_t L,
+                                        size_t N,
+                                        size_t bMax,
+                                        GSLVectorType *x,
+                                        const GSLVectorType *wX = nullptr,
+                                        const GSLVectorType *wY = nullptr) override;
+  // clang-format on
+
+  // clang-format off
+    void modified_van_mises_distance_sq_derivative(GSLMatrixType* gradient,
+                                                   const GSLVectorType *y,
+                                                   size_t L,
+                                                   size_t N,
+                                                   size_t bMax,
+                                                   GSLVectorType *x,
+                                                   const GSLVectorType *wX = nullptr,
+                                                   const GSLVectorType *wY = nullptr) override;
   // clang-format on
 
   // clang-format off
     bool approximate(GSLMatrixType* y,
-                      size_t L,
-                      size_t bMax,
-                      GSLMatrixType* x,
-                      const GSLVectorType* wX = nullptr,
-                      const GSLVectorType* wY = nullptr,
-                      GslminimizerResult* result = nullptr,
-                      const ApproximateOptions& options = ApproximateOptions{}) override;
+                     size_t L,
+                     size_t bMax,
+                     GSLMatrixType* x,
+                     const GSLVectorType* wX = nullptr,
+                     const GSLVectorType* wY = nullptr,
+                     GslminimizerResult* result = nullptr,
+                     const ApproximateOptions& options = ApproximateOptions{}) override;
+  // clang-format on
+
+  // clang-format off
+    void modified_van_mises_distance_sq(T* distance,
+                                        GSLMatrixType *y,
+                                        size_t L,
+                                        size_t bMax,
+                                        GSLMatrixType *x,
+                                        const GSLVectorType *wX = nullptr,
+                                        const GSLVectorType *wY = nullptr) override;
+  // clang-format on
+
+  // clang-format off
+    void modified_van_mises_distance_sq_derivative(GSLMatrixType* gradient,
+                                                   GSLMatrixType *y,
+                                                   size_t L,
+                                                   size_t bMax,
+                                                   GSLMatrixType *x,
+                                                   const GSLVectorType *wX = nullptr,
+                                                   const GSLVectorType *wY = nullptr) override;
   // clang-format on
 
  private:
@@ -83,7 +150,37 @@ bool dirac_to_dirac_approx_short_thread<double>::approximate(
     const GSLVectorType* wX, const GSLVectorType* wY,
     GslminimizerResult* result, const ApproximateOptions& options);
 
+template <>
+void dirac_to_dirac_approx_short_thread<float>::modified_van_mises_distance_sq(
+    float* distance, const gsl_vector_float* y, size_t L, size_t N, size_t bMax,
+    gsl_vector_float* x, const gsl_vector_float* wX,
+    const gsl_vector_float* wY);
+
+template <>
+void dirac_to_dirac_approx_short_thread<double>::modified_van_mises_distance_sq(
+    double* distance, const gsl_vector* y, size_t L, size_t N, size_t bMax,
+    gsl_vector* x, const gsl_vector* wX, const gsl_vector* wY);
+
+template <>
+void dirac_to_dirac_approx_short_thread<float>::
+    modified_van_mises_distance_sq_derivative(gsl_matrix_float* gradient,
+                                              const gsl_vector_float* y,
+                                              size_t L, size_t N, size_t bMax,
+                                              gsl_vector_float* x,
+                                              const gsl_vector_float* wX,
+                                              const gsl_vector_float* wY);
+
+template <>
+void dirac_to_dirac_approx_short_thread<
+    double>::modified_van_mises_distance_sq_derivative(gsl_matrix* gradient,
+                                                       const gsl_vector* y,
+                                                       size_t L, size_t N,
+                                                       size_t bMax,
+                                                       gsl_vector* x,
+                                                       const gsl_vector* wX,
+                                                       const gsl_vector* wY);
+
 extern template class dirac_to_dirac_approx_short_thread<double>;
 extern template class dirac_to_dirac_approx_short_thread<float>;
 
-#endif  // DIRAC_TO_DIRAC_SHORT_H
+#endif  // DIRAC_TO_DIRAC_SHORT_THREAD_H

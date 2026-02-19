@@ -53,6 +53,10 @@ class gm_to_dirac_approx_short_test_modified_van_mises_distance_sq_derivative
   static gradient_van_mises_distance gradVanMisesDistance;
 };
 
+gradient_van_mises_distance
+    gm_to_dirac_approx_short_test_modified_van_mises_distance_sq_derivative::
+        gradVanMisesDistance;
+
 TEST_P(gm_to_dirac_approx_short_test_modified_van_mises_distance_sq_derivative,
        parameterized_test_modified_van_mises_distance_sq_derivative) {
   GmToDiracTestCaseParams p = GetParam();
@@ -69,6 +73,48 @@ TEST_P(gm_to_dirac_approx_short_test_modified_van_mises_distance_sq_derivative,
         x, &params, analyticalGrad);
     ASSERT_TRUE(assert_gsl_vectors_close(analyticalGrad, numericalGrad, eps));
   }
+}
+
+TEST_P(
+    gm_to_dirac_approx_short_test_modified_van_mises_distance_sq_derivative,
+    parameterized_test_modified_van_mises_distance_sq_derivative_wrapper_distance) {
+  GmToDiracTestCaseParams p = GetParam();
+
+  const double c_b = gm_to_dirac_short<double>::c_b(p.bMax);
+  GMToDiracConstWeightOptimizationParams params(covDiag, wX, p.N, p.L, p.bMax,
+                                                c_b);
+
+  // wrapper
+  double distance_wrapper = 0;
+  auto gm2d = gm_to_dirac_short<double>();
+  gm2d.modified_van_mises_distance_sq(covDiag, &distance_wrapper, p.L, p.N,
+                                      p.bMax, x, wX);
+  // internal impl
+  double distance_internal = 1;
+  distance_internal =
+      gm_to_dirac_short<double>::modified_van_mises_distance_sq(x, &params);
+
+  ASSERT_TRUE(distance_wrapper == distance_internal);
+}
+
+TEST_P(
+    gm_to_dirac_approx_short_test_modified_van_mises_distance_sq_derivative,
+    parameterized_test_modified_van_mises_distance_sq_derivative_wrapper_gradient) {
+  GmToDiracTestCaseParams p = GetParam();
+
+  const double c_b = gm_to_dirac_short<double>::c_b(p.bMax);
+  GMToDiracConstWeightOptimizationParams params(covDiag, wX, p.N, p.L, p.bMax,
+                                                c_b);
+
+  // wrapper
+  auto gm2d = gm_to_dirac_short<double>();
+  gm2d.modified_van_mises_distance_sq_derivative(covDiag, numericalGrad, p.L, p.N,
+                                      p.bMax, x, wX);
+
+  // internal impl
+  gm_to_dirac_short<double>::modified_van_mises_distance_sq_derivative(
+      x, &params, analyticalGrad);
+  ASSERT_TRUE(assert_gsl_vectors_close(analyticalGrad, numericalGrad, eps));
 }
 
 INSTANTIATE_TEST_SUITE_P(
