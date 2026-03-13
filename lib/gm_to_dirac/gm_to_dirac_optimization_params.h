@@ -127,10 +127,10 @@ struct GMToDiracBaseOptimizationParams : public GslMinimizerOptimizationParams {
     P1IntegrationParams* p1Params = static_cast<P1IntegrationParams*>(params);
     const size_t N = p1Params->N;
     const gsl_vector* covDiag = p1Params->covDiag;
-    double sum = gsl_sf_pow_int(b, (int)(N + 1));
+    double sum = b;
     for (size_t k = 0; k < N; k++) {
       sum *=
-          1.00 / std::sqrt(covDiag->data[k] * covDiag->data[k] + 2.00 * b * b);
+          b / std::sqrt(covDiag->data[k] * covDiag->data[k] + 2.00 * b * b);
     }
     return sum;
   }

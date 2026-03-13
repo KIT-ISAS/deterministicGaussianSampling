@@ -28,9 +28,9 @@ double gm_to_dirac_short<T>::calculateP2(double b, void* params) {
 #ifdef USE_CACHE_MANAGER
   if (!cacheManagerPrefactor || !cacheManagerPrefactor->get(b, &prefactor)) {
 #endif
-    prefactor = twoPiNHalf * gsl_sf_pow_int(b, (int)(N + 1));
+    prefactor = b;
     for (size_t k = 0; k < N; k++) {
-      prefactor *= 1.00 / std::sqrt(covDiagSqrd->data[k] + twoBSqrd);
+      prefactor *= std::sqrt(twoBSqrd / (covDiagSqrd->data[k] + twoBSqrd));
     }
 #ifdef USE_CACHE_MANAGER
     if (cacheManagerPrefactor) cacheManagerPrefactor->set(b, prefactor);
@@ -81,10 +81,9 @@ double gm_to_dirac_short<T>::calculateGradP2(double b, void* params) {
 #ifdef USE_CACHE_MANAGER
   if (!cacheManagerPrefactor || !cacheManagerPrefactor->get(b, &prefactor)) {
 #endif
-    prefactor =
-        gsl_sf_pow_int(b, (int)(N + 1)) / (covDiagSqrd->data[eta] + twoBSqrd);
+    prefactor = 2*b / (covDiagSqrd->data[eta] + twoBSqrd);
     for (size_t k = 0; k < N; k++) {
-      prefactor *= 1.00 / std::sqrt(covDiagSqrd->data[k] + twoBSqrd);
+      prefactor *= std::sqrt(twoBSqrd / (covDiagSqrd->data[k] + twoBSqrd));
     }
 #ifdef USE_CACHE_MANAGER
   }
@@ -142,7 +141,7 @@ void gm_to_dirac_short<T>::calculateD2(
                                     (double)(params->bMax), &localResult,
                                     &localAbserr);
         grad->data[i * N + k] +=
-            2.00 * twoPiNHalf * wX->data[i] * x->data[i * N + k] * localResult;
+            wX->data[i] * x->data[i * N + k] * localResult;
       }
     }
   }
