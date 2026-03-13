@@ -11,7 +11,6 @@ double gm_to_dirac_short<T>::calculateP2(double b, void* params) {
   const size_t L = optiParams->L;
   const gsl_vector* wX = optiParams->wX;
   const gsl_vector* covDiagSqrd = optiParams->covDiagSqrd;
-  const double twoPiNHalf = optiParams->twoPiNHalf;
 
   GMToDiracIntegrationParams* integrationParams = optiParams->integrationParams;
   const gsl_vector* x = integrationParams->x;
@@ -114,7 +113,6 @@ void gm_to_dirac_short<T>::calculateD2(
   const size_t L = params->L;
   const size_t N = params->N;
   const gsl_vector* wX = params->wX;
-  const double twoPiNHalf = params->twoPiNHalf;
   const GslQuadratureAdaptiveGaussKronrod* integrationUtils =
       params->gaussKronrod;
   params->integrationParams->reset(x);
