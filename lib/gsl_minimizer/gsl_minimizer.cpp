@@ -153,10 +153,10 @@ int gsl_minimizer::minimize(gsl_vector* x, GslminimizerResult* result,
       }
     }
 
-  } while (status == GSL_CONTINUE && iter < maxIterations);
+  } while (status == GSL_CONTINUE && (!maxIterations || iter < maxIterations));
   gsl_vector_memcpy(x, minimizer->x);
 
-  if (iter >= maxIterations) {
+  if (maxIterations && iter >= maxIterations) {
     if (verbose)
       std::cout << ">>> GSL optimizer: Max iterations reached: "
                 << maxIterations << "\n";
