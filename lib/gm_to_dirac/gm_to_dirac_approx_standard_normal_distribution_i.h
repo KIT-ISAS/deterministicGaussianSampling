@@ -36,7 +36,7 @@ class gm_to_dirac_approx_standard_normal_distribution_i {
    * @param options options for minimizer
    * @return true, on success, false otherwise
    */
-  virtual bool approximate(size_t L, size_t N, size_t bMax, T* x, const T* wX,
+  virtual bool approximate(size_t L, size_t N, T* x, const T* wX,
                            GslminimizerResult* result,
                            const ApproximateOptions& options) = 0;
 
@@ -86,7 +86,7 @@ class gm_to_dirac_approx_standard_normal_distribution_i {
    * @param options options for minimizer
    * @return true, on success, false otherwise
    */
-  virtual bool approximate(size_t L, size_t N, size_t bMax, GSLVectorType* x,
+  virtual bool approximate(size_t L, size_t N, GSLVectorType* x,
                            const GSLVectorType* wX, GslminimizerResult* result,
                            const ApproximateOptions& options) = 0;
 
@@ -120,9 +120,9 @@ class gm_to_dirac_approx_standard_normal_distribution_i {
    * @param options options for minimizer
    * @return true, on success, false otherwise
    */
-  virtual void modified_van_mises_distance_sq_derivative(GSLVectorType* gradient, size_t L,
-                                                         size_t N, size_t bMax,
-                                                         GSLVectorType* x, const GSLVectorType* wX) = 0;
+  virtual void modified_van_mises_distance_sq_derivative(
+      GSLVectorType* gradient, size_t L, size_t N, size_t bMax,
+      GSLVectorType* x, const GSLVectorType* wX) = 0;
 
   /**
    * @brief approximate using gsl matricies where possible
@@ -136,10 +136,10 @@ class gm_to_dirac_approx_standard_normal_distribution_i {
    * @param options options for minimizer
    * @return true, on success, false otherwise
    */
-  virtual bool approximate(size_t L, size_t N, size_t bMax, GSLMatrixType* x,
+  virtual bool approximate(size_t L, size_t N, GSLMatrixType* x,
                            const GSLVectorType* wX, GslminimizerResult* result,
                            const ApproximateOptions& options) = 0;
-                           
+
   /**
    * @brief calculate modified van mises distance based on standard normal
    * deviation and x
@@ -170,9 +170,9 @@ class gm_to_dirac_approx_standard_normal_distribution_i {
    * @param options options for minimizer
    * @return true, on success, false otherwise
    */
-  virtual void modified_van_mises_distance_sq_derivative(GSLMatrixType* gradient, size_t L,
-                                                         size_t N, size_t bMax,
-                                                         GSLMatrixType* x, const GSLVectorType* wX) = 0;
+  virtual void modified_van_mises_distance_sq_derivative(
+      GSLMatrixType* gradient, size_t L, size_t N, size_t bMax,
+      GSLMatrixType* x, const GSLVectorType* wX) = 0;
 };
 
 #endif  // GM_TO_DIRAC_APPROX_STANDARD_NORMAL_DISTRIBUTION_I_H

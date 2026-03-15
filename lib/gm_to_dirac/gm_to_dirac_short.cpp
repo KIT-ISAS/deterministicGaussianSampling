@@ -24,7 +24,7 @@
 
 template <typename T>
 bool gm_to_dirac_short<T>::approximate(const T* covDiag, size_t L, size_t N,
-                                       size_t bMax, T* x, const T* wX,
+                                       T* x, const T* wX,
                                        GslminimizerResult* result,
                                        const ApproximateOptions& options) {
   assert(x != nullptr);
@@ -33,8 +33,8 @@ bool gm_to_dirac_short<T>::approximate(const T* covDiag, size_t L, size_t N,
   GSLVectorView<T> vectorViewX(x, L * N);
   GSLVectorView<T> vectorViewWX(wX, L);
   GSLVectorView<T> vectorViewCovDiag(covDiag, N);
-  return approximate(vectorViewCovDiag, L, N, bMax, vectorViewX, vectorViewWX,
-                     result, options);
+  return approximate(vectorViewCovDiag, L, N, vectorViewX, vectorViewWX, result,
+                     options);
 }
 
 template <typename T>
@@ -64,14 +64,14 @@ void gm_to_dirac_short<T>::modified_van_mises_distance_sq_derivative(
 
 template <typename T>
 bool gm_to_dirac_short<T>::approximate(const GSLVectorType* covDiag, size_t L,
-                                       size_t N, size_t bMax, GSLMatrixType* x,
+                                       size_t N, GSLMatrixType* x,
                                        const GSLVectorType* wX,
                                        GslminimizerResult* result,
                                        const ApproximateOptions& options) {
   assert(x->size1 == L);
   assert(x->size2 == N);
   GSLVectorView<T> vectorViewX(x);
-  return approximate(covDiag, L, N, bMax, vectorViewX, wX, result, options);
+  return approximate(covDiag, L, N, vectorViewX, wX, result, options);
 }
 
 template <typename T>
@@ -133,7 +133,7 @@ double gm_to_dirac_short<T>::c_b(size_t bMax) {
 
 template <>
 bool gm_to_dirac_short<float>::approximate(const gsl_vector_float* covDiag,
-                                           size_t L, size_t N, size_t bMax,
+                                           size_t L, size_t N,
                                            gsl_vector_float* x,
                                            const gsl_vector_float* wX,
                                            GslminimizerResult* result,
@@ -161,7 +161,7 @@ bool gm_to_dirac_short<float>::approximate(const gsl_vector_float* covDiag,
   }
 
   gm_to_dirac_short<double> doubleApprox;
-  bool success = doubleApprox.approximate(covDiagDouble, L, N, bMax, xDouble,
+  bool success = doubleApprox.approximate(covDiagDouble, L, N, xDouble,
                                           wXDouble, result, options);
 
   for (size_t i = 0; i < x->size; ++i) {
@@ -176,8 +176,8 @@ bool gm_to_dirac_short<float>::approximate(const gsl_vector_float* covDiag,
 
 template <>
 bool gm_to_dirac_short<double>::approximate(const gsl_vector* covDiag, size_t L,
-                                            size_t N, size_t bMax,
-                                            gsl_vector* x, const gsl_vector* wX,
+                                            size_t N, gsl_vector* x,
+                                            const gsl_vector* wX,
                                             GslminimizerResult* result,
                                             const ApproximateOptions& options) {
   assert(x->size % N == 0);
@@ -196,8 +196,8 @@ bool gm_to_dirac_short<double>::approximate(const gsl_vector* covDiag, size_t L,
   }
 
   GSLWeightHelper<double> wXHelper(wX, L);
-  GMToDiracConstWeightOptimizationParams params(covDiag, wXHelper, N, L, bMax,
-                                                c_b(bMax));
+  GMToDiracConstWeightOptimizationParams params(
+      covDiag, wXHelper, N, L, options.bMax, c_b(options.bMax));
 
   gsl_minimizer gslMinimizer(
       options.maxIterations, options.xtolAbs, options.xtolRel, options.ftolAbs,

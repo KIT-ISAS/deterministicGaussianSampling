@@ -17,7 +17,6 @@ class gm_to_dirac_short : public gm_to_dirac_approx_i<T> {
   bool approximate(const T* covDiag,
                    size_t L,
                    size_t N,
-                   size_t bMax,
                    T* x,
                    const T* wX = nullptr,
                    GslminimizerResult* result = nullptr,
@@ -48,7 +47,6 @@ class gm_to_dirac_short : public gm_to_dirac_approx_i<T> {
   bool approximate(const GSLVectorType* covDiag,
                    size_t L,
                    size_t N,
-                   size_t bMax,
                    GSLVectorType* x,
                    const GSLVectorType* wX = nullptr,
                    GslminimizerResult* result = nullptr,
@@ -79,7 +77,6 @@ class gm_to_dirac_short : public gm_to_dirac_approx_i<T> {
   bool approximate(const GSLVectorType* covDiag,
                    size_t L,
                    size_t N,
-                   size_t bMax,
                    GSLMatrixType* x,
                    const GSLVectorType* wX = nullptr,
                    GslminimizerResult* result = nullptr,
@@ -146,7 +143,7 @@ class gm_to_dirac_short : public gm_to_dirac_approx_i<T> {
 
 template <>
 bool gm_to_dirac_short<float>::approximate(const gsl_vector_float* covDiag,
-                                           size_t L, size_t N, size_t bMax,
+                                           size_t L, size_t N,
                                            gsl_vector_float* x,
                                            const gsl_vector_float* wX,
                                            GslminimizerResult* result,
@@ -154,8 +151,8 @@ bool gm_to_dirac_short<float>::approximate(const gsl_vector_float* covDiag,
 
 template <>
 bool gm_to_dirac_short<double>::approximate(const gsl_vector* covDiag, size_t L,
-                                            size_t N, size_t bMax,
-                                            gsl_vector* x, const gsl_vector* wX,
+                                            size_t N, gsl_vector* x,
+                                            const gsl_vector* wX,
                                             GslminimizerResult* result,
                                             const ApproximateOptions& options);
 

@@ -12,6 +12,7 @@ struct ApproximateOptions {
   bool initialX = false;         // True if x should be used as initial guess
   size_t maxIterations = 10000;  // Maximum number of iterations
   bool verbose = false;          // True if verbose output is needed
+  size_t bMax = 100;
 };
 
 #endif // APPROXIMATE_OPTIONS_H

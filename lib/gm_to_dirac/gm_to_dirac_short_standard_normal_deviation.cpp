@@ -14,11 +14,11 @@
 
 template <typename T>
 bool gm_to_dirac_short_standard_normal_deviation<T>::approximate(
-    size_t L, size_t N, size_t bMax, T* x, const T* wX,
+    size_t L, size_t N,  T* x, const T* wX,
     GslminimizerResult* result, const ApproximateOptions& options) {
   std::vector<T> covDiag(N, T(1));
   gm_to_dirac_short<T> gmToDiracInstance;
-  return gmToDiracInstance.approximate(covDiag.data(), L, N, bMax, x, wX,
+  return gmToDiracInstance.approximate(covDiag.data(), L, N,  x, wX,
                                        result, options);
 }
 
@@ -45,12 +45,12 @@ void gm_to_dirac_short_standard_normal_deviation<
 
 template <typename T>
 bool gm_to_dirac_short_standard_normal_deviation<T>::approximate(
-    size_t L, size_t N, size_t bMax, GSLVectorType* x, const GSLVectorType* wX,
+    size_t L, size_t N,  GSLVectorType* x, const GSLVectorType* wX,
     GslminimizerResult* result, const ApproximateOptions& options) {
   std::vector<T> covDiag(N, T(1));
   GSLVectorView<T> covDiagView(covDiag.data(), N);
   gm_to_dirac_short<T> gmToDiracInstance;
-  return gmToDiracInstance.approximate(covDiagView, L, N, bMax, x, wX, result,
+  return gmToDiracInstance.approximate(covDiagView, L, N, x, wX, result,
                                        options);
 }
 
@@ -81,12 +81,12 @@ void gm_to_dirac_short_standard_normal_deviation<
 
 template <typename T>
 bool gm_to_dirac_short_standard_normal_deviation<T>::approximate(
-    size_t L, size_t N, size_t bMax, GSLMatrixType* x, const GSLVectorType* wX,
+    size_t L, size_t N,  GSLMatrixType* x, const GSLVectorType* wX,
     GslminimizerResult* result, const ApproximateOptions& options) {
   std::vector<T> covDiag(N, T(1));
   GSLVectorView<T> covDiagView(covDiag.data(), N);
   gm_to_dirac_short<T> gmToDiracInstance;
-  return gmToDiracInstance.approximate(covDiagView, L, N, bMax, x, wX, result,
+  return gmToDiracInstance.approximate(covDiagView, L, N,  x, wX, result,
                                        options);
 }
 

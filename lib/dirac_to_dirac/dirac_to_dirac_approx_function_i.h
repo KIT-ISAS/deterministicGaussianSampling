@@ -35,7 +35,6 @@ class dirac_to_dirac_approx_function_i {
    * @param M number of input data points
    * @param L number of data points for reduction
    * @param N dimension of the data
-   * @param bMax bMax
    * @param x first guess for the reduction and return value
    * @param wXcallback callback for the weight function
    * @param wXDcallback callback for the gradient of the weight function
@@ -43,8 +42,8 @@ class dirac_to_dirac_approx_function_i {
    * @param options options for minimizer
    * @return true, on success, false otherwise
    */
-  virtual bool approximate(const T* y, size_t M, size_t L, size_t N,
-                           size_t bMax, T* x, wXf wXcallback, wXd wXDcallback,
+  virtual bool approximate(const T* y, size_t M, size_t L, size_t N, T* x,
+                           wXf wXcallback, wXd wXDcallback,
                            GslminimizerResult* result,
                            const ApproximateOptions& options) = 0;
 
@@ -91,7 +90,6 @@ class dirac_to_dirac_approx_function_i {
    * @param y input data points
    * @param L number of data points for reduction
    * @param N dimension of the data
-   * @param bMax bMax
    * @param x first guess for the reduction and return value
    * @param wXcallback callback for the weight function
    * @param wXDcallback callback for the gradient of the weight function
@@ -100,8 +98,8 @@ class dirac_to_dirac_approx_function_i {
    * @return true, on success, false otherwise
    */
   virtual bool approximate(const GSLVectorType* y, size_t L, size_t N,
-                           size_t bMax, GSLVectorType* x, wXf wXcallback,
-                           wXd wXDcallback, GslminimizerResult* result,
+                           GSLVectorType* x, wXf wXcallback, wXd wXDcallback,
+                           GslminimizerResult* result,
                            const ApproximateOptions& options) = 0;
 
   /**
@@ -145,7 +143,6 @@ class dirac_to_dirac_approx_function_i {
    *
    * @param y input data points
    * @param L number of data points for reduction
-   * @param bMax bMax
    * @param x first guess for the reduction and return value
    * @param wXcallback callback for the weight function
    * @param wXDcallback callback for the gradient of the weight function
@@ -153,8 +150,8 @@ class dirac_to_dirac_approx_function_i {
    * @param options options for minimizer
    * @return true, on success, false otherwise
    */
-  virtual bool approximate(GSLMatrixType* y, size_t L, size_t bMax,
-                           GSLMatrixType* x, wXf wXcallback, wXd wXDcallback,
+  virtual bool approximate(GSLMatrixType* y, size_t L, GSLMatrixType* x,
+                           wXf wXcallback, wXd wXDcallback,
                            GslminimizerResult* result,
                            const ApproximateOptions& options) = 0;
 

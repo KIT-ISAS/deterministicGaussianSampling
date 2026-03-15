@@ -14,8 +14,8 @@
 #include "capture_time.h"
 #include "dirac_to_dirac_optimization_params.h"
 #include "gsl_minimizer.h"
-#include "gsl_utils_weight_helper.h"
 #include "gsl_utils_view_helper.h"
+#include "gsl_utils_weight_helper.h"
 #include "math_util_defs.h"
 
 #define eps 0.000001
@@ -23,9 +23,8 @@
 
 template <typename T>
 bool dirac_to_dirac_approx_short_thread<T>::approximate(
-    const T* y, size_t M, size_t L, size_t N, size_t bMax, T* x, const T* wX,
-    const T* wY, GslminimizerResult* result,
-    const ApproximateOptions& options) {
+    const T* y, size_t M, size_t L, size_t N, T* x, const T* wX, const T* wY,
+    GslminimizerResult* result, const ApproximateOptions& options) {
   assert(x != nullptr);
   assert(y != nullptr);
 
@@ -33,8 +32,8 @@ bool dirac_to_dirac_approx_short_thread<T>::approximate(
   GSLVectorView<T> vectorViewX(x, L * N);
   GSLVectorView<T> vectorViewWY(wY, M);
   GSLVectorView<T> vectorViewWX(wX, L);
-  return approximate(vectorViewY, L, N, bMax, vectorViewX, vectorViewWX,
-                     vectorViewWY, result, options);
+  return approximate(vectorViewY, L, N, vectorViewX, vectorViewWX, vectorViewWY,
+                     result, options);
 }
 
 template <typename T>
@@ -73,17 +72,16 @@ void dirac_to_dirac_approx_short_thread<
 
 template <typename T>
 bool dirac_to_dirac_approx_short_thread<T>::approximate(
-    GSLMatrixType* y, size_t L, size_t bMax, GSLMatrixType* x,
-    const GSLVectorType* wX, const GSLVectorType* wY,
-    GslminimizerResult* result, const ApproximateOptions& options) {
+    GSLMatrixType* y, size_t L, GSLMatrixType* x, const GSLVectorType* wX,
+    const GSLVectorType* wY, GslminimizerResult* result,
+    const ApproximateOptions& options) {
   assert(x->size2 == y->size2);
   assert(x->size1 == L);
 
   size_t N = y->size2;
   GSLVectorView<T> vectorViewY(y);
   GSLVectorView<T> vectorViewX(x);
-  return approximate(vectorViewY, L, N, bMax, vectorViewX, wX, wY,
-                     result, options);
+  return approximate(vectorViewY, L, N, vectorViewX, wX, wY, result, options);
 }
 
 template <typename T>
@@ -96,8 +94,8 @@ void dirac_to_dirac_approx_short_thread<T>::modified_van_mises_distance_sq(
   size_t N = y->size2;
   GSLVectorView<T> vectorViewY(y);
   GSLVectorView<T> vectorViewX(x);
-  modified_van_mises_distance_sq(distance, vectorViewY, L, N, bMax,
-                                 vectorViewX, wX, wY);
+  modified_van_mises_distance_sq(distance, vectorViewY, L, N, bMax, vectorViewX,
+                                 wX, wY);
 }
 
 template <typename T>
@@ -113,8 +111,8 @@ void dirac_to_dirac_approx_short_thread<
   size_t N = y->size2;
   GSLVectorView<T> vectorViewY(y);
   GSLVectorView<T> vectorViewX(x);
-  modified_van_mises_distance_sq_derivative(gradient, vectorViewY, L, N,
-                                            bMax, vectorViewX, wX, wY);
+  modified_van_mises_distance_sq_derivative(gradient, vectorViewY, L, N, bMax,
+                                            vectorViewX, wX, wY);
 }
 
 template <typename T>
@@ -260,8 +258,8 @@ inline void dirac_to_dirac_approx_short_thread<T>::correctMean(
 
 template <>
 bool dirac_to_dirac_approx_short_thread<float>::approximate(
-    const gsl_vector_float* y, size_t L, size_t N, size_t bMax,
-    gsl_vector_float* x, const gsl_vector_float* wX, const gsl_vector_float* wY,
+    const gsl_vector_float* y, size_t L, size_t N, gsl_vector_float* x,
+    const gsl_vector_float* wX, const gsl_vector_float* wY,
     GslminimizerResult* result, const ApproximateOptions& options) {
   const size_t M = y->size / N;
   GSLVectorView<double> vectorViewY(y, M * N);
@@ -269,9 +267,9 @@ bool dirac_to_dirac_approx_short_thread<float>::approximate(
   GSLVectorView<double> vectorViewWY(wY, M);
   GSLVectorView<double> vectorViewWX(wX, L);
   dirac_to_dirac_approx_short_thread<double> doubleApprox;
-  bool success = doubleApprox.approximate(vectorViewY, L, N, bMax,
-                                          vectorViewX, vectorViewWX,
-                                          vectorViewWY, result, options);
+  bool success =
+      doubleApprox.approximate(vectorViewY, L, N, vectorViewX, vectorViewWX,
+                               vectorViewWY, result, options);
 
   const size_t xSize = x->size;
   for (size_t i = 0; i < xSize; ++i) {
@@ -283,7 +281,7 @@ bool dirac_to_dirac_approx_short_thread<float>::approximate(
 
 template <>
 bool dirac_to_dirac_approx_short_thread<double>::approximate(
-    const gsl_vector* y, size_t L, size_t N, size_t bMax, gsl_vector* x,
+    const gsl_vector* y, size_t L, size_t N, gsl_vector* x,
     const gsl_vector* wX, const gsl_vector* wY, GslminimizerResult* result,
     const ApproximateOptions& options) {
   assert(x->size == L * N);
@@ -304,8 +302,8 @@ bool dirac_to_dirac_approx_short_thread<double>::approximate(
 
   // Set up optimization parameters
   DiracToDiracConstWeightOptimizationParams params =
-      DiracToDiracConstWeightOptimizationParams(wXHelper, wYHelper, y, N, M, L,
-                                                bMax, c_b(bMax));
+      DiracToDiracConstWeightOptimizationParams(
+          wXHelper, wYHelper, y, N, M, L, options.bMax, c_b(options.bMax));
 
   gsl_minimizer gslMinimizer = gsl_minimizer(
       options.maxIterations, options.xtolAbs, options.xtolRel, options.ftolAbs,
@@ -330,8 +328,8 @@ void dirac_to_dirac_approx_short_thread<float>::modified_van_mises_distance_sq(
   GSLVectorView<double> vectorViewWY(wY, M);
   GSLVectorView<double> vectorViewWX(wX, L);
   dirac_to_dirac_approx_short_thread<double> doubleApprox;
-  doubleApprox.modified_van_mises_distance_sq(&distanceDouble, vectorViewY,
-                                              L, N, bMax, vectorViewX,
+  doubleApprox.modified_van_mises_distance_sq(&distanceDouble, vectorViewY, L,
+                                              N, bMax, vectorViewX,
                                               vectorViewWX, vectorViewWY);
   *distance = static_cast<float>(distanceDouble);
 }
@@ -344,8 +342,8 @@ void dirac_to_dirac_approx_short_thread<double>::modified_van_mises_distance_sq(
   GSLWeightHelper<double> wXHelper(wX, L);
   GSLWeightHelper<double> wYHelper(wY, M);
   DiracToDiracConstWeightOptimizationParams optiParams =
-      DiracToDiracConstWeightOptimizationParams(wXHelper, wYHelper, y, N, M, L, bMax,
-                                                c_b(bMax));
+      DiracToDiracConstWeightOptimizationParams(wXHelper, wYHelper, y, N, M, L,
+                                                bMax, c_b(bMax));
   *distance = modified_van_mises_distance_sq(x, &optiParams);
 }
 
@@ -368,8 +366,8 @@ void dirac_to_dirac_approx_short_thread<float>::
   dirac_to_dirac_approx_short_thread<double> doubleApprox;
 
   doubleApprox.modified_van_mises_distance_sq_derivative(
-      gradientDouble, vectorViewY, L, N, bMax, vectorViewX,
-      vectorViewWX, vectorViewWY);
+      gradientDouble, vectorViewY, L, N, bMax, vectorViewX, vectorViewWX,
+      vectorViewWY);
 
   const size_t gradientSize = gradient->size1 * gradient->size2;
   for (size_t i = 0; i < gradientSize; i++)
@@ -391,8 +389,8 @@ void dirac_to_dirac_approx_short_thread<
   GSLWeightHelper<double> wXHelper(wX, L);
   GSLWeightHelper<double> wYHelper(wY, M);
   DiracToDiracConstWeightOptimizationParams optiParams =
-      DiracToDiracConstWeightOptimizationParams(wXHelper, wYHelper, y, N, M, L, bMax,
-                                                c_b(bMax));
+      DiracToDiracConstWeightOptimizationParams(wXHelper, wYHelper, y, N, M, L,
+                                                bMax, c_b(bMax));
   gsl_vector_view flatGradient =
       gsl_vector_view_array(gradient->data, gradient->size1 * gradient->size2);
   modified_van_mises_distance_sq_derivative(x, &optiParams,

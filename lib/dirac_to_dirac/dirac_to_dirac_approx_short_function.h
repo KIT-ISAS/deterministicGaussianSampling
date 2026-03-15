@@ -23,7 +23,6 @@ class dirac_to_dirac_approx_short_function
                     size_t M,
                     size_t L,
                     size_t N,
-                    size_t bMax,
                     T* x,
                     wXf wXcallback,
                     wXd wXDcallback,
@@ -58,7 +57,6 @@ class dirac_to_dirac_approx_short_function
   bool approximate(const GSLVectorType* y,
                     size_t L,
                     size_t N,
-                    size_t bMax,
                     GSLVectorType* x,
                     wXf wXcallback,
                     wXd wXDcallback,
@@ -91,7 +89,6 @@ class dirac_to_dirac_approx_short_function
   // clang-format off
   bool approximate(GSLMatrixType* y,
                     size_t L,
-                    size_t bMax,
                     GSLMatrixType* x,
                     wXf wXcallback,
                     wXd wXDeriv,
@@ -136,8 +133,8 @@ class dirac_to_dirac_approx_short_function
 
 template <>
 bool dirac_to_dirac_approx_short_function<double>::approximate(
-    const gsl_vector* y, size_t L, size_t N, size_t bMax, gsl_vector* x,
-    wXf wXcallback, wXd wXDcallback, GslminimizerResult* result,
+    const gsl_vector* y, size_t L, size_t N, gsl_vector* x, wXf wXcallback,
+    wXd wXDcallback, GslminimizerResult* result,
     const ApproximateOptions& options);
 
 template <>

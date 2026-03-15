@@ -21,14 +21,13 @@ DLL_EXPORT void delete_dirac_to_dirac_approx_short_function_double(
 }
 
 DLL_EXPORT bool dirac_to_dirac_approx_short_function_double_approximate(
-    void* instance, const double* y, size_t M, size_t L, size_t N, size_t bMax,
-    double* x,
+    void* instance, const double* y, size_t M, size_t L, size_t N, double* x,
     typename dirac_to_dirac_approx_function_i<double>::wXf wXcallback,
     typename dirac_to_dirac_approx_function_i<double>::wXd wXDcallback,
     GslminimizerResult* result, const ApproximateOptions* options) {
   auto* obj =
       static_cast<dirac_to_dirac_approx_short_function<double>*>(instance);
-  return obj->approximate(y, M, L, N, bMax, x, wXcallback, wXDcallback, result,
+  return obj->approximate(y, M, L, N, x, wXcallback, wXDcallback, result,
                           options ? *options : ApproximateOptions{});
 }
 
@@ -40,8 +39,8 @@ dirac_to_dirac_approx_short_function_double_modified_van_mises_distance_sq(
     typename dirac_to_dirac_approx_function_i<double>::wXd wXDcallback) {
   auto* obj =
       static_cast<dirac_to_dirac_approx_short_function<double>*>(instance);
-  obj->modified_van_mises_distance_sq(distance, y, M, L, N, bMax, x,
-                                                  wXcallback, wXDcallback);
+  obj->modified_van_mises_distance_sq(distance, y, M, L, N, bMax, x, wXcallback,
+                                      wXDcallback);
 }
 
 DLL_EXPORT void
@@ -53,7 +52,7 @@ dirac_to_dirac_approx_short_function_double_modified_van_mises_distance_sq_deriv
   auto* obj =
       static_cast<dirac_to_dirac_approx_short_function<double>*>(instance);
   obj->modified_van_mises_distance_sq_derivative(gradient, y, M, L, N, bMax, x,
-                                                  wXcallback, wXDcallback);
+                                                 wXcallback, wXDcallback);
 }
 
 }  // extern "C"

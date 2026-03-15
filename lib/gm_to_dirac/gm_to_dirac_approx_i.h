@@ -37,8 +37,8 @@ class gm_to_dirac_approx_i {
    * @param options options for minimizer
    * @return true, on success, false otherwise
    */
-  virtual bool approximate(const T* covDiag, size_t L, size_t N, size_t bMax,
-                           T* x, const T* wX, GslminimizerResult* result,
+  virtual bool approximate(const T* covDiag, size_t L, size_t N, T* x,
+                           const T* wX, GslminimizerResult* result,
                            const ApproximateOptions& options) = 0;
 
   /**
@@ -90,8 +90,8 @@ class gm_to_dirac_approx_i {
    * @return true, on success, false otherwise
    */
   virtual bool approximate(const GSLVectorType* covDiag, size_t L, size_t N,
-                           size_t bMax, GSLVectorType* x,
-                           const GSLVectorType* wX, GslminimizerResult* result,
+                           GSLVectorType* x, const GSLVectorType* wX,
+                           GslminimizerResult* result,
                            const ApproximateOptions& options) = 0;
 
   /**
@@ -143,8 +143,8 @@ class gm_to_dirac_approx_i {
    * @return true, on success, false otherwise
    */
   virtual bool approximate(const GSLVectorType* covDiag, size_t L, size_t N,
-                           size_t bMax, GSLMatrixType* x,
-                           const GSLVectorType* wX, GslminimizerResult* result,
+                           GSLMatrixType* x, const GSLVectorType* wX,
+                           GslminimizerResult* result,
                            const ApproximateOptions& options) = 0;
 
   /**
