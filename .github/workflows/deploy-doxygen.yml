@@ -2,10 +2,10 @@ name: Deploy Doxygen to GitHub Pages
 
 on:
   push:
-    # branches:
-    #   - "main"
-    # tags:
-    #   - "v*"
+    branches:
+      - "main"
+    tags:
+      - "v*"
 
 permissions:
   contents: read
