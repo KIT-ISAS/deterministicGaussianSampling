@@ -18,7 +18,7 @@
 
 template <typename T>
 bool dirac_to_dirac_approx_short_function<T>::approximate(
-    const T* y, size_t M, size_t L, size_t N, size_t bMax, T* x, wXf wXcallback,
+    const T* y, size_t M, size_t L, size_t N, T* x, wXf wXcallback,
     wXd wXDcallback, GslminimizerResult* result,
     const ApproximateOptions& options) {
   assert(x != nullptr);
@@ -26,8 +26,8 @@ bool dirac_to_dirac_approx_short_function<T>::approximate(
 
   GSLVectorView<T> vectorViewY(y, M * N);
   GSLVectorView<T> vectorViewX(x, L * N);
-  return approximate(vectorViewY, L, N, bMax, vectorViewX, wXcallback,
-                     wXDcallback, result, options);
+  return approximate(vectorViewY, L, N, vectorViewX, wXcallback, wXDcallback,
+                     result, options);
 }
 
 template <typename T>
@@ -63,7 +63,7 @@ void dirac_to_dirac_approx_short_function<
 
 template <typename T>
 bool dirac_to_dirac_approx_short_function<T>::approximate(
-    GSLMatrixType* y, size_t L, size_t bMax, GSLMatrixType* x, wXf wXcallback,
+    GSLMatrixType* y, size_t L, GSLMatrixType* x, wXf wXcallback,
     wXd wXDcallback, GslminimizerResult* result,
     const ApproximateOptions& options) {
   assert(x->size2 == y->size2);
@@ -72,8 +72,8 @@ bool dirac_to_dirac_approx_short_function<T>::approximate(
   size_t N = y->size2;
   GSLVectorView<T> vectorViewY(y);
   GSLVectorView<T> vectorViewX(x);
-  return approximate(vectorViewY, L, N, bMax, vectorViewX, wXcallback,
-                     wXDcallback, result, options);
+  return approximate(vectorViewY, L, N, vectorViewX, wXcallback, wXDcallback,
+                     result, options);
 }
 
 template <typename T>
@@ -288,8 +288,8 @@ inline void dirac_to_dirac_approx_short_function<T>::combined_distance_metric(
 
 template <>
 bool dirac_to_dirac_approx_short_function<double>::approximate(
-    const gsl_vector* y, size_t L, size_t N, size_t bMax, gsl_vector* x,
-    wXf wXcallback, wXd wXDcallback, GslminimizerResult* result,
+    const gsl_vector* y, size_t L, size_t N, gsl_vector* x, wXf wXcallback,
+    wXd wXDcallback, GslminimizerResult* result,
     const ApproximateOptions& options) {
   assert(x->size == L * N);
   assert(y->size % N == 0);
@@ -306,8 +306,8 @@ bool dirac_to_dirac_approx_short_function<double>::approximate(
 
   // Set up optimization parameters
   DiracToDiracVariableWeightOptimizationParams params =
-      DiracToDiracVariableWeightOptimizationParams(wXcallback, wXDcallback, y,
-                                                   N, M, L, bMax, c_b(bMax));
+      DiracToDiracVariableWeightOptimizationParams(
+          wXcallback, wXDcallback, y, N, M, L, options.bMax, c_b(options.bMax));
 
   gsl_minimizer gslMinimizer(
       options.maxIterations, options.xtolAbs, options.xtolRel, options.ftolAbs,

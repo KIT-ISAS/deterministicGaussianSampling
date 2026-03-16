@@ -45,7 +45,7 @@ static void DiracToDiracApproxShortBenchmarkApproximate(
 
   for (auto _ : state) {
     benchmark_dirac_to_dirac_approx_short::diracToDiracApproxShortDoubleInstance
-        .approximate(y, L, N, 100, x);
+        .approximate(y, L, N, x);
   }
 
   state.counters["L"] = (double)L;

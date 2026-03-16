@@ -46,7 +46,7 @@ static void DiracToDiracApproxShortThreadBenchmarkApproximate(
 
   for (auto _ : state) {
     benchmark_dirac_to_dirac_approx_short_thread::
-        diracToDiracApproxShortThreadDoubleInstance.approximate(y, L, N, 100,
+        diracToDiracApproxShortThreadDoubleInstance.approximate(y, L, N,
                                                                 x);
   }
 

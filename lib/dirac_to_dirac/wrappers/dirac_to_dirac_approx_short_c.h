@@ -20,11 +20,11 @@ DLL_EXPORT void delete_dirac_to_dirac_approx_short_double(void* instance) {
 }
 
 DLL_EXPORT bool dirac_to_dirac_approx_short_double_approximate(
-    void* instance, const double* y, size_t M, size_t L, size_t N, size_t bMax,
-    double* x, const double* wX, const double* wY, GslminimizerResult* result,
+    void* instance, const double* y, size_t M, size_t L, size_t N, double* x,
+    const double* wX, const double* wY, GslminimizerResult* result,
     const ApproximateOptions* options) {
   auto* obj = static_cast<dirac_to_dirac_approx_short<double>*>(instance);
-  return obj->approximate(y, M, L, N, bMax, x, wX, wY, result,
+  return obj->approximate(y, M, L, N, x, wX, wY, result,
                           options ? *options : ApproximateOptions{});
 }
 
@@ -41,7 +41,8 @@ dirac_to_dirac_approx_short_double_modified_van_mises_distance_sq_derivative(
     void* instance, double* gradient, const double* y, size_t M, size_t L,
     size_t N, size_t bMax, double* x, const double* wX, const double* wY) {
   auto* obj = static_cast<dirac_to_dirac_approx_short<double>*>(instance);
-  obj->modified_van_mises_distance_sq_derivative(gradient, y, M, L, N, bMax, x, wX, wY);
+  obj->modified_van_mises_distance_sq_derivative(gradient, y, M, L, N, bMax, x,
+                                                 wX, wY);
 }
 
 DLL_EXPORT void* create_dirac_to_dirac_approx_short_float() {
@@ -53,11 +54,11 @@ DLL_EXPORT void delete_dirac_to_dirac_approx_short_float(void* instance) {
 }
 
 DLL_EXPORT bool dirac_to_dirac_approx_short_float_approximate(
-    void* instance, const float* y, size_t M, size_t L, size_t N, size_t bMax,
-    float* x, const float* wX, const float* wY, GslminimizerResult* result,
+    void* instance, const float* y, size_t M, size_t L, size_t N, float* x,
+    const float* wX, const float* wY, GslminimizerResult* result,
     const ApproximateOptions* options) {
   auto* obj = static_cast<dirac_to_dirac_approx_short<float>*>(instance);
-  return obj->approximate(y, M, L, N, bMax, x, wX, wY, result,
+  return obj->approximate(y, M, L, N, x, wX, wY, result,
                           options ? *options : ApproximateOptions{});
 }
 
@@ -74,7 +75,8 @@ dirac_to_dirac_approx_short_float_modified_van_mises_distance_sq_derivative(
     void* instance, float* gradient, const float* y, size_t M, size_t L,
     size_t N, size_t bMax, float* x, const float* wX, const float* wY) {
   auto* obj = static_cast<dirac_to_dirac_approx_short<float>*>(instance);
-  obj->modified_van_mises_distance_sq_derivative(gradient, y, M, L, N, bMax, x, wX, wY);
+  obj->modified_van_mises_distance_sq_derivative(gradient, y, M, L, N, bMax, x,
+                                                 wX, wY);
 }
 
 }  // extern "C"

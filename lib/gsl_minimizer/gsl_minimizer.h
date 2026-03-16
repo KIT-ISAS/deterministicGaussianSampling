@@ -57,7 +57,7 @@ class gsl_minimizer {
   /**
    * @brief Construct a new gsl minimizer object
    *
-   * @param maxIterations max number of iterations to run
+   * @param maxIterations max number of iterations to run, 0 = inf
    * @param xtolAbs absolute tolerance for x
    * @param xtolRel relative tolerance for x
    * @param ftolAbs absolute tolerance for f
@@ -90,6 +90,7 @@ class gsl_minimizer {
 
   /**
    * @brief set the maximum number of iterations to run
+   * Value of "0" makes minimization continues until a stop criteria is met
    *
    * @param iterations maximum number of iterations
    */

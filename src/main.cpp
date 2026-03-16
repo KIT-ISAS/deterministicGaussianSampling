@@ -130,8 +130,8 @@ void runRandomApproximation() {
             << ", M:" << M << "\n";
   GslminimizerResult resultDiracToDirac;
   CaptureTime::start("dirac_to_dirac<double>");
-  dirac_to_dirac.approximate(y, M, L, N, 100, x_dirac_to_dirac, nullptr,
-                             nullptr, &resultDiracToDirac);
+  dirac_to_dirac.approximate(y, M, L, N, x_dirac_to_dirac, nullptr, nullptr,
+                             &resultDiracToDirac);
   std::cout << resultDiracToDirac;
   CaptureTime::stop("dirac_to_dirac<double>");
 
@@ -140,9 +140,9 @@ void runRandomApproximation() {
             << ", N:" << N << ", M:" << M << "\n";
   GslminimizerResult resultDiracToDiracThreaded;
   CaptureTime::start("dirac_to_dirac_threaded<double>");
-  dirac_to_dirac_threaded.approximate(y, M, L, N, 100,
-                                      x_dirac_to_dirac_threaded, nullptr,
-                                      nullptr, &resultDiracToDiracThreaded);
+  dirac_to_dirac_threaded.approximate(y, M, L, N, x_dirac_to_dirac_threaded,
+                                      nullptr, nullptr,
+                                      &resultDiracToDiracThreaded);
   std::cout << resultDiracToDiracThreaded;
   CaptureTime::stop("dirac_to_dirac_threaded<double>");
 
@@ -151,9 +151,9 @@ void runRandomApproximation() {
             << ", N:" << N << ", M:" << M << "\n";
   GslminimizerResult resultDiracToDiracWeighted;
   CaptureTime::start("dirac_to_dirac_weighted<double>");
-  dirac_to_dirac_weighted.approximate(y, M, L, N, 100,
-                                      x_dirac_to_dirac_weighted, wXcallback,
-                                      wXDcallback, &resultDiracToDiracWeighted);
+  dirac_to_dirac_weighted.approximate(y, M, L, N, x_dirac_to_dirac_weighted,
+                                      wXcallback, wXDcallback,
+                                      &resultDiracToDiracWeighted);
   std::cout << resultDiracToDiracWeighted;
   CaptureTime::stop("dirac_to_dirac_weighted<double>");
 
@@ -162,7 +162,7 @@ void runRandomApproximation() {
             << "\n";
   GslminimizerResult resultGausianToDirac;
   CaptureTime::start("gausian_to_dirac<double>");
-  gausian_to_dirac.approximate(covDiag, L, N, 100, x_gausian_to_dirac, nullptr,
+  gausian_to_dirac.approximate(covDiag, L, N, x_gausian_to_dirac, nullptr,
                                &resultGausianToDirac);
   std::cout << resultGausianToDirac;
   CaptureTime::stop("gausian_to_dirac<double>");

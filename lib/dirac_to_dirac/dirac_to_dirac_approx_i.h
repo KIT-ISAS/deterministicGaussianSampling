@@ -33,7 +33,6 @@ class dirac_to_dirac_approx_i {
    * @param M number of input data points
    * @param L number of data points for reduction
    * @param N dimension of the data
-   * @param bMax bMax
    * @param x first guess for the reduction and return value
    * @param wX weights for the x data points
    * @param wY weights for the y data points
@@ -41,9 +40,8 @@ class dirac_to_dirac_approx_i {
    * @param options options for minimizer
    * @return true, on success, false otherwise
    */
-  virtual bool approximate(const T* y, size_t M, size_t L, size_t N,
-                           size_t bMax, T* x, const T* wX, const T* wY,
-                           GslminimizerResult* result,
+  virtual bool approximate(const T* y, size_t M, size_t L, size_t N, T* x,
+                           const T* wX, const T* wY, GslminimizerResult* result,
                            const ApproximateOptions& options) = 0;
 
   /**
@@ -89,7 +87,6 @@ class dirac_to_dirac_approx_i {
    * @param y input data points
    * @param L number of data points for reduction
    * @param N dimension of the data
-   * @param bMax bMax
    * @param x first guess for the reduction and return value
    * @param wX weights for the x data points
    * @param wY weights for the y data points
@@ -98,9 +95,8 @@ class dirac_to_dirac_approx_i {
    * @return true, on success, false otherwise
    */
   virtual bool approximate(const GSLVectorType* y, size_t L, size_t N,
-                           size_t bMax, GSLVectorType* x,
-                           const GSLVectorType* wX, const GSLVectorType* wY,
-                           GslminimizerResult* result,
+                           GSLVectorType* x, const GSLVectorType* wX,
+                           const GSLVectorType* wY, GslminimizerResult* result,
                            const ApproximateOptions& options) = 0;
 
   /**
@@ -143,7 +139,6 @@ class dirac_to_dirac_approx_i {
    *
    * @param y input data points
    * @param L number of data points for reduction
-   * @param bMax bMax
    * @param x first guess for the reduction and return value
    * @param wX weights for the x data points
    * @param wY weights for the y data points
@@ -151,9 +146,9 @@ class dirac_to_dirac_approx_i {
    * @param options options for minimizer
    * @return true, on success, false otherwise
    */
-  virtual bool approximate(GSLMatrixType* y, size_t L, size_t bMax,
-                           GSLMatrixType* x, const GSLVectorType* wX,
-                           const GSLVectorType* wY, GslminimizerResult* result,
+  virtual bool approximate(GSLMatrixType* y, size_t L, GSLMatrixType* x,
+                           const GSLVectorType* wX, const GSLVectorType* wY,
+                           GslminimizerResult* result,
                            const ApproximateOptions& options) = 0;
 
   /**
