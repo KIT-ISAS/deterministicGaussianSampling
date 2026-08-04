@@ -92,9 +92,10 @@ TEST_P(
   // internal impl
   double distance_internal = 1;
   distance_internal =
-      gm_to_dirac_short<double>::modified_van_mises_distance_sq(x, &params);
+      gm_to_dirac_short<double>::modified_van_mises_distance_sq(x, &params) +
+      gm_to_dirac_short<double>::constantOffset(&params);
 
-  ASSERT_TRUE(distance_wrapper == distance_internal);
+  ASSERT_DOUBLE_EQ(distance_wrapper, distance_internal);
 }
 
 TEST_P(

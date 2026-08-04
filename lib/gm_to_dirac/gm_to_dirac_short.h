@@ -124,6 +124,8 @@ class gm_to_dirac_short : public gm_to_dirac_approx_i<T> {
                                  GMToDiracConstWeightOptimizationParams* params,
                                  double* f, gsl_vector* grad);
 
+  static inline double constantOffset(const GMToDiracConstWeightOptimizationParams* params);  
+
   static inline void correctMean(gsl_vector* x, const gsl_vector* wX, size_t L,
                                  size_t N);
 

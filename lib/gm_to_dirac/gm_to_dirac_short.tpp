@@ -44,11 +44,12 @@ double gm_to_dirac_short<T>::calculateP2(double b, void* params) {
       const double xikSqrd = x->data[i * N + k] * x->data[i * N + k];
       innerSum += xikSqrd / (covDiagSqrd->data[k] + twoBSqrd);
     }
-    const double expValuei = wXi * std::exp(-0.5 * innerSum);
+    const double expm1Valuei = wXi * std::expm1(-0.5 * innerSum);
 #ifdef USE_CACHE_MANAGER
-    if (cacheManagerInnerSum) cacheManagerInnerSum->set(b, i, expValuei);
+    if (cacheManagerInnerSum)
+      cacheManagerInnerSum->set(b, i, expm1Valuei + wXi);
 #endif
-    sum += expValuei;
+    sum += expm1Valuei;
   }
 
   const double ret = prefactor * sum;
@@ -154,8 +155,6 @@ inline void gm_to_dirac_short<T>::calculateD3(
   const gsl_vector* wX = params->wX;
   const size_t bMax = params->bMax;
   gsl_vector* localDist = params->vecN;
-  const double bMaxSqrd = static_cast<double>(bMax * bMax);
-  const double bMaxSqrdHalf = bMaxSqrd / 2.00;
   const double cB = params->cB;
   (void)cB;
 
@@ -171,22 +170,19 @@ inline void gm_to_dirac_short<T>::calculateD3(
       const double wXiwXj = wXi * wX->data[j];
       double localDistSq = 0.00;
       if (i == j) {
-        if (f) d3[(size_t)tid] += bMaxSqrdHalf * wXiwXj;
-        continue;
+        continue;  // constant-only contribution
       }
       for (size_t k = 0; k < N; k++) {
         localDist->data[k] = x->data[i * N + k] - x->data[j * N + k];
         localDistSq += localDist->data[k] * localDist->data[k];
       }
       if (localDistSq <= 0.0) {
-        if (f) d3[(size_t)tid] += bMaxSqrdHalf * wXiwXj;
-        continue;
+        continue;  // coincident points: constant-only contribution
       }
       const double logLocalDistSq = std::log(localDistSq);
       if (f) {
         d3[(size_t)tid] += 0.125 * wXiwXj *
-                           (4.00 * bMaxSqrd +
-                            (logApprox - 2.00 * std::log(bMax)) * localDistSq +
+                           ((logApprox - 2.00 * std::log(bMax)) * localDistSq +
                             (localDistSq * logLocalDistSq));
       }
       if (grad) {
@@ -205,6 +201,18 @@ inline void gm_to_dirac_short<T>::calculateD3(
       *f += d3[i];
     }
   }
+}
+
+template <typename T>
+inline double gm_to_dirac_short<T>::constantOffset(
+    const GMToDiracConstWeightOptimizationParams* params) {
+  const double bMax = static_cast<double>(params->bMax);
+  double w = 0.00;
+  for (size_t i = 0; i < params->L; ++i)
+    w += params->wX->data[i];
+
+  return -2.00 * w * params->twoPiNHalf * params->D1 +
+         0.5 * bMax * bMax * w * w;
 }
 
 template <typename T>

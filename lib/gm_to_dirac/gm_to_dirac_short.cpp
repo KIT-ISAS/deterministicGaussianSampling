@@ -234,7 +234,8 @@ void gm_to_dirac_short<double>::modified_van_mises_distance_sq(
   GMToDiracConstWeightOptimizationParams optiParams =
       GMToDiracConstWeightOptimizationParams(covDiag, wXHelper, N, L, bMax,
                                              c_b(bMax));
-  *distance = modified_van_mises_distance_sq(x, &optiParams);
+  *distance = modified_van_mises_distance_sq(x, &optiParams) +
+              constantOffset(&optiParams);
 }
 
 template <>
