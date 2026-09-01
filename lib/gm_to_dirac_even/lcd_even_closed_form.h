@@ -8,8 +8,6 @@
 #include <cmath>
 #include <cstddef>
 
-#include "gsl_quadrature_adaptive_gauss_kronrod.h"
-
 /**
  * @file lcd_even_closed_form.h
  * @brief quadrature-free closed forms for the LCD / modified Cramer-von-Mises
@@ -35,7 +33,7 @@
  * @return Ei(x), or exactly 0.0 in case of underflow, domain error or overflow
  */
 inline double lcd_ei(double x) {
-  assert(x == 0.00);
+  assert(x < 0.00);
 
   gsl_sf_result result;
   const int status = gsl_sf_expint_Ei_e(x, &result);
@@ -105,27 +103,6 @@ inline double lcd_c_repulsion(double b, double c) {
 
   const double z = -c / (4.00 * bSqrd);
   return 0.50 * bSqrd * std::exp(z) + 0.125 * c * lcd_ei(z);
-}
-
-/**
- * @brief C(b, c) - b^2/2, the repulsion term with its leading term removed
- *
- * Removed from D3 in total: (sum_i w_i)^2 * bMax^2 / 2.
- *
- * @param b upper integration bound, must be > 0
- * @param c squared distance between the two samples, must be >= 0
- * @return C(b, c) - b^2/2; exactly 0 at c = 0, so coincident samples
- * (including every i == j pair) now contribute nothing
- */
-inline double lcd_c_repulsion_reduced(double b, double c) {
-  assert(b > 0.00);
-  assert(c >= 0.00);
-
-  if (c <= 0.00) return 0.00;  // coincident samples
-
-  const double bSqrd = b * b;
-  const double z = -c / (4.00 * bSqrd);
-  return 0.50 * bSqrd * std::expm1(z) + 0.125 * c * lcd_ei(z);
 }
 
 /**
@@ -224,10 +201,6 @@ inline double lcd_delta_bkk1(size_t k, double bMax, double c);
 
 /**
  * @brief closed form of dBkk / dBkk1
- *
- * Exposed separately so the threshold calibration test can measure exactly
- * where this loses accuracy. Production callers want lcd_delta_bkk() /
- * lcd_delta_bkk1(), which apply the guard.
  *
  * @param k half the dimension, N = 2k
  * @param bMax upper integration bound
@@ -393,7 +366,7 @@ inline double lcd_delta_bkk1(size_t k, double bMax, double c) {
  * has been removed analytically:
  *
  *   f_reduced = -2 * pow(2,k) * sum_i w_i * lcd_delta_bkk_reduced(k, bMax, c_i)
- *             + sum_ij w_i w_j * lcd_c_repulsion_reduced(bMax, T_ij)
+ *             + sum_ij w_i w_j * C(bMax, T_ij)
  *
  * and the true distance is D = f_reduced + K, with
  *
