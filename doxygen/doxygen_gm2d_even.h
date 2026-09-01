@@ -63,11 +63,11 @@
  *
  * Common parameters:
  *
- * - L     → number of Dirac components
- * - N     → dimension, must be even
- * - bMax  → integration bound, any value > 0
- * - x     → initial guess and output locations (L × N)
- * - wX    → weights of the Dirac mixture (optional)
+ * - L     -> number of Dirac components
+ * - N     -> dimension, must be even
+ * - bMax  -> integration bound, any value > 0
+ * - x     -> initial guess and output locations (L × N)
+ * - wX    -> weights of the Dirac mixture (optional)
  *
  * If wX is nullptr:
  *
@@ -136,11 +136,11 @@
  * two are directly comparable. The building blocks live in
  * lcd_even_closed_form.h:
  *
- * - lcd_a_n()          → D1, valid for all N (odd and even)
- * - lcd_delta_bkk()    → the per-sample D2 term
- * - lcd_delta_bkk1()   → the per-sample D2 gradient term
- * - lcd_c_repulsion()  → the exact per-pair D3 term
- * - lcd_ei()      → underflow-guarded Ei
+ * - lcd_a_n()          -> D1, valid for all N (odd and even)
+ * - lcd_delta_bkk()    -> the per-sample D2 term
+ * - lcd_delta_bkk1()   -> the per-sample D2 gradient term
+ * - lcd_c_repulsion()  -> the exact per-pair D3 term
+ * - lcd_ei()      -> Ei(x)
  *
  * \section gm_even_notes Notes
  *
