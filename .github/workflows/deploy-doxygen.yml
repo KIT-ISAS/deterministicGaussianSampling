@@ -37,6 +37,7 @@ jobs:
           GSL_RNG_SEED: "42"
         run: |
           python plots/plot_samples.py --generator build/plots/generate_samples --out-dir doxygen/images
+          python plots/plot_samples_even.py --generator build/plots/generate_samples_even --short-generator build/plots/generate_samples --out-dir doxygen/images
 
       - name: Build docs
         run: |

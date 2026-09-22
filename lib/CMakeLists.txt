@@ -36,6 +36,10 @@ set(GM_TO_DIRAC_C_WRAPPER_DIR ${GM_TO_DIRAC_DIR}/wrappers)
 file(GLOB GM_TO_DIRAC_SOURCES ${GM_TO_DIRAC_DIR}/*.cpp)
 file(GLOB GM_TO_DIRAC_C_WRAPPER_SOURCES ${GM_TO_DIRAC_C_WRAPPER_DIR}/*.cpp)
 
+# gm_to_dirac_even sources (closed-form even-N standard normal path)
+set(GM_TO_DIRAC_EVEN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/gm_to_dirac_even)
+file(GLOB GM_TO_DIRAC_EVEN_SOURCES ${GM_TO_DIRAC_EVEN_DIR}/*.cpp)
+
 # common sources
 set(COMMON_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/debug/capture_time.cpp
@@ -64,6 +68,7 @@ add_library(approxLCD_static STATIC
     ${DIRAC_TO_DIRAC_C_WRAPPER_SOURCES}
     ${GM_TO_DIRAC_SOURCES}
     ${GM_TO_DIRAC_C_WRAPPER_SOURCES}
+    ${GM_TO_DIRAC_EVEN_SOURCES}
 )
 target_include_directories(approxLCD_static PUBLIC
     ${COMMON_INCLUDES}
@@ -71,6 +76,7 @@ target_include_directories(approxLCD_static PUBLIC
     ${DIRAC_TO_DIRAC_C_WRAPPER_DIR}
     ${GM_TO_DIRAC_DIR}
     ${GM_TO_DIRAC_C_WRAPPER_DIR}
+    ${GM_TO_DIRAC_EVEN_DIR}
 )
 set_target_properties(approxLCD_static PROPERTIES OUTPUT_NAME "approxLCD")
 target_link_libraries(approxLCD_static PUBLIC GSL::gsl GSL::gslcblas OpenMP::OpenMP_CXX)
@@ -82,6 +88,7 @@ add_library(approxLCD_shared SHARED
     ${DIRAC_TO_DIRAC_C_WRAPPER_SOURCES}
     ${GM_TO_DIRAC_SOURCES}
     ${GM_TO_DIRAC_C_WRAPPER_SOURCES}
+    ${GM_TO_DIRAC_EVEN_SOURCES}
 )
 target_include_directories(approxLCD_shared PUBLIC
     ${COMMON_INCLUDES}
@@ -89,6 +96,7 @@ target_include_directories(approxLCD_shared PUBLIC
     ${DIRAC_TO_DIRAC_C_WRAPPER_DIR}
     ${GM_TO_DIRAC_DIR}
     ${GM_TO_DIRAC_C_WRAPPER_DIR}
+    ${GM_TO_DIRAC_EVEN_DIR}
 )
 
 # platform-specific options
