@@ -8,8 +8,6 @@
 #include <cmath>
 #include <cstddef>
 
-#include "gsl_quadrature_adaptive_gauss_kronrod.h"
-
 /**
  * @file lcd_even_closed_form.h
  * @brief quadrature-free closed forms for the LCD / modified Cramer-von-Mises
@@ -203,10 +201,6 @@ inline double lcd_delta_bkk1(size_t k, double bMax, double c);
 
 /**
  * @brief closed form of dBkk / dBkk1
- *
- * Exposed separately so the threshold calibration test can measure exactly
- * where this loses accuracy. Production callers want lcd_delta_bkk() /
- * lcd_delta_bkk1(), which apply the guard.
  *
  * @param k half the dimension, N = 2k
  * @param bMax upper integration bound
