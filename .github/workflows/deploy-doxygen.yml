@@ -30,7 +30,7 @@ jobs:
       - name: Build sample generator
         run: |
           cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-          cmake --build build --target generate_samples -j
+          cmake --build build --target generate_samples generate_samples_even generate_samples_even_binf -j
 
       - name: Generate sample plots
         env:
@@ -38,6 +38,7 @@ jobs:
         run: |
           python plots/plot_samples.py --generator build/plots/generate_samples --out-dir doxygen/images
           python plots/plot_samples_even.py --generator build/plots/generate_samples_even --short-generator build/plots/generate_samples --out-dir doxygen/images
+          python plots/plot_samples_even_binf.py --generator build/plots/generate_samples_even_binf --out-dir doxygen/images
 
       - name: Build docs
         run: |
