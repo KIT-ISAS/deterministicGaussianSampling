@@ -42,14 +42,12 @@
  * Implementations:
  * - \ref page_gm_short "gm_to_dirac_short"
  * - \ref page_gm_stddev "gm_to_dirac_short_standard_normal_deviation"
- * - \ref page_gm_even "gm_to_dirac_even_closed_form" — quadrature-free;
+ * - \ref page_gm_even "gm_to_dirac_even_closed_form" : quadrature-free;
  *   requires even N and a standard normal or isotropic target, but accepts
  *   any bMax > 0
- *
- * All implementations follow the gm_to_dirac_approx_i<T> interface, except:
- * - gm_to_dirac_short_standard_normal_deviation and
- *   gm_to_dirac_even_closed_form, which follow
- *   gm_to_dirac_approx_standard_normal_distribution_i<T>.
+ * - \ref page_gm_even_binf "gm_to_dirac_even_binf" : quadrature-free AND
+ *   bMax-free, the bMax -> infinity limit of the entry above; requires even
+ *   N, a standard normal target and a zero-mean sample set, which it enforces by optimising on the zero-mean manifold
  *
  * \section samples Sample Gallery
  *
