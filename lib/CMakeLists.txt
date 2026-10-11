@@ -10,7 +10,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # set debug / release flags
 set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -Wall -Wextra" CACHE STRING "Debug build flags" FORCE)
 set(CMAKE_CXX_FLAGS_RELEASE
-    "-O3 -march=native -ffast-math -funroll-loops -DNDEBUG -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wundef -Wuseless-cast -Wzero-as-null-pointer-constant -Wduplicated-cond -Wduplicated-branches -Wlogical-op"
+    "-O3 -ffast-math -funroll-loops -DNDEBUG -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wdouble-promotion -Wformat=2 -Wundef -Wuseless-cast -Wzero-as-null-pointer-constant -Wduplicated-cond -Wduplicated-branches -Wlogical-op"
     CACHE STRING "Release build flags" FORCE)
 
 # lto fix
