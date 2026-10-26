@@ -34,6 +34,10 @@
  */
 inline double lcd_ei(double x) {
   assert(x < 0.00);
+  // GSL's default handler aborts on a domain error (x == 0) or underflow (x < ~-701.8)
+  // before the status check below runs; map both to 0.0
+  // |Ei(-700)| =~ 1.4e-307
+  if (!(x < 0.00) || x < -700.00) return 0.00;
 
   gsl_sf_result result;
   const int status = gsl_sf_expint_Ei_e(x, &result);
